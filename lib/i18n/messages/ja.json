@@ -36,7 +36,8 @@
         "rules": "ルール",
         "apiDocs": "APIドキュメント",
         "discordServer": "Discordサーバー",
-        "supportUs": "支援する"
+        "supportUs": "支援する",
+        "clans": "クラン"
       }
     },
     "headerLoginDialog": {
@@ -108,7 +109,8 @@
         "rules": "ルール",
         "apiDocs": "APIドキュメント",
         "discordServer": "Discordサーバー",
-        "supportUs": "支援する"
+        "supportUs": "支援する",
+        "clans": "クラン"
       },
       "yourProfile": "あなたのプロフィール",
       "friends": "フレンド",
@@ -896,6 +898,68 @@
           },
           "tooltip": "{value} {type}"
         }
+      }
+    },
+    "clans": {
+      "meta": {
+        "title": "クラン | {appName}"
+      },
+      "header": "クラン",
+      "createHeader": "クラン作成",
+      "pagination": {
+        "previous": "前へ",
+        "next": "次へ",
+        "pageOf": "{page} / {maxPages} ページ"
+      },
+      "labels": {
+        "created": "作成日",
+        "totalPp": "合計PP"
+      },
+      "form": {
+        "namePlaceholder": "クラン名",
+        "avatarFromComputer": "クランアバター（PCからアップロード）",
+        "create": "作成",
+        "avatarTooLarge": "アバターが大きすぎます。より小さい画像を選択してください。",
+        "createFailed": "クランを作成できませんでした"
+      }
+    },
+    "clansDetails": {
+      "meta": {
+        "title": "クラン詳細 | {appName}"
+      },
+      "fallbackTitle": "クラン",
+      "labels": {
+        "totalPp": "合計PP",
+        "created": "作成日"
+      },
+      "roles": {
+        "creator": "作成者",
+        "member": "メンバー"
+      },
+      "suffix": {
+        "pp": "pp"
+      },
+      "errors": {
+        "notFound": "クランが見つかりません。"
+      },
+      "leave": {
+        "hint": "このクランはいつでも脱退できます。",
+        "action": "クランを脱退",
+        "left": "クランを脱退しました",
+        "unavailable": "クランを脱退できませんでした"
+      },
+      "manage": {
+        "header": "クラン管理",
+        "descriptionLabel": "クラン説明",
+        "descriptionPlaceholder": "クラン説明を入力...",
+        "avatarLabel": "クランアバター",
+        "save": "変更を保存",
+        "saved": "クランを更新しました",
+        "updateFailed": "クランを更新できませんでした",
+        "kick": "追放",
+        "kicked": "メンバーをクランから削除しました",
+        "kickFailed": "メンバーを削除できませんでした",
+        "onlyCreatorCanKick": "クラン作成者のみメンバーをキックできます"
       }
     }
   }
