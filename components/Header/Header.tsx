@@ -53,6 +53,7 @@ export default function Header() {
 
           <div className="hidden items-center text-sm  font-medium md:flex lg:space-x-4">
             <HeaderLink name={t("links.leaderboard")} href="/leaderboard" />
+            <HeaderLink name={t("links.clans")} href="/clans" />
             <HeaderLink name={t("links.topPlays")} href="/topplays" />
             <HeaderLink name={t("links.beatmaps")} href="/beatmaps/search" />
 
