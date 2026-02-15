@@ -36,7 +36,8 @@
         "rules": "rules",
         "apiDocs": "api docs",
         "discordServer": "discowd sewvew",
-        "supportUs": "support us"
+        "supportUs": "support us",
+        "clans": "cwans"
       }
     },
     "headerLoginDialog": {
@@ -108,7 +109,8 @@
         "rules": "Rules",
         "apiDocs": "api docs",
         "discordServer": "discowd sewvew",
-        "supportUs": "Support Us"
+        "supportUs": "Support Us",
+        "clans": "Cwans"
       },
       "yourProfile": "Youww pwofiwe",
       "friends": "fwiends",
@@ -900,6 +902,49 @@
           },
           "tooltip": "{value} {type}"
         }
+      }
+    },
+    "clans": {
+      "meta": {
+        "title": "Cwans | {appName}"
+      },
+      "header": "Cwans",
+      "createHeader": "Cweate cwan",
+      "pagination": {
+        "previous": "Pwevious",
+        "next": "Next",
+        "pageOf": "Page {page} / {maxPages}"
+      },
+      "labels": {
+        "created": "Cweated",
+        "totalPp": "Totaw PP"
+      },
+      "form": {
+        "namePlaceholder": "Cwan name",
+        "avatarFromComputer": "Cwan avatar (upwoad fwom youw computew)",
+        "create": "Cweate",
+        "avatarTooLarge": "Avatar is too warge. Pwease choose a smawwew image.",
+        "createFailed": "Faiwed to cweate cwan"
+      }
+    },
+    "clansDetails": {
+      "meta": {
+        "title": "Cwan detaiws | {appName}"
+      },
+      "fallbackTitle": "Cwan",
+      "labels": {
+        "totalPp": "Totaw PP",
+        "created": "Cweated"
+      },
+      "roles": {
+        "creator": "Cweatow",
+        "member": "Membew"
+      },
+      "suffix": {
+        "pp": "pp"
+      },
+      "errors": {
+        "notFound": "Cwan not found."
       }
     }
   }
