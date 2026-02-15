@@ -9,6 +9,7 @@ import {
   Menu,
   MonitorCog,
   Search,
+  Shield,
   UserIcon,
   Users2,
   UsersRoundIcon,
@@ -68,6 +69,11 @@ export default function HeaderMobileDrawer() {
         icon: <ChartColumnIncreasing />,
         title: t("navigation.leaderboard"),
         url: "/leaderboard",
+      },
+      {
+        icon: <Shield />,
+        title: t("navigation.clans"),
+        url: "/clans",
       },
       {
         icon: <LucideHistory />,
