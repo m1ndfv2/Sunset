@@ -211,7 +211,12 @@ export default function ClanDetailsPage() {
         { url: `clan/${clanId}`, options: { json: payload } },
       ]);
 
-      await clanQuery.mutate(updated, { revalidate: false });
+      if (updated?.clan) {
+        await clanQuery.mutate(updated, { revalidate: false });
+      }
+      else {
+        await clanQuery.mutate();
+      }
 
       toast({
         title: t("manage.saved"),
