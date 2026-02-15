@@ -17,10 +17,12 @@ import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getUserToken } from "@/lib/actions/getUserToken";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
@@ -47,14 +49,54 @@ async function fileToDataUrl(file: File): Promise<string> {
   return dataUrl;
 }
 
-async function tryPoster<T>(
-  attempts: Array<{ url: string; options?: Parameters<typeof poster>[1] }>,
+async function requestWithMethod<T>(
+  method: "post" | "delete",
+  url: string,
+  options?: Parameters<typeof poster>[1],
 ): Promise<T> {
+  if (method === "post") {
+    return await poster<T>(url, options);
+  }
+
+  const token = await getUserToken();
+  const result = await kyInstance
+    .delete(url, {
+      ...options,
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    })
+    .then(async (res) => {
+      const contentType = res?.headers?.get("content-type");
+
+      if (!(contentType != null
+        && contentType.includes("application/json"))) {
+        return null;
+      }
+
+      try {
+        return await res.json();
+      }
+      catch {
+        return null;
+      }
+    });
+
+  return result as T;
+}
+
+async function tryRequests<T>(
+  attempts: Array<{
+    method?: "post" | "delete";
+    url: string;
+    options?: Parameters<typeof poster>[1];
+  }>,
+): Promise<T | null> {
   let lastError: unknown;
 
   for (const attempt of attempts) {
     try {
-      return await poster<T>(attempt.url, attempt.options);
+      return await requestWithMethod<T>(attempt.method ?? "post", attempt.url, attempt.options);
     }
     catch (error) {
       lastError = error;
@@ -123,9 +165,14 @@ export default function ClanDetailsPage() {
     setIsLeaveLoading(true);
 
     try {
-      await tryPoster([
-        { url: `clan/${clanId}/leave` },
-        { url: `clan/leave/${clanId}` },
+      await tryRequests([
+        { method: "post", url: `clan/${clanId}/leave` },
+        { method: "post", url: `clan/leave/${clanId}` },
+        { method: "post", url: `clan/leave`, options: { json: { clan_id: clanId } } },
+        { method: "delete", url: `clan/${clanId}/leave` },
+        { method: "delete", url: `clan/leave/${clanId}` },
+        { method: "delete", url: `clan/${clanId}/member/self` },
+        { method: "delete", url: `clan/${clanId}/members/me` },
       ]);
 
       toast({
@@ -158,7 +205,7 @@ export default function ClanDetailsPage() {
         avatar_url: encodedAvatar,
       };
 
-      const updated = await tryPoster<ClanDetailsResponse>([
+      const updated = await tryRequests<ClanDetailsResponse>([
         { url: `clan/${clanId}/edit`, options: { json: payload } },
         { url: `clan/${clanId}/update`, options: { json: payload } },
         { url: `clan/${clanId}`, options: { json: payload } },
@@ -192,13 +239,23 @@ export default function ClanDetailsPage() {
     }
 
     try {
-      const updated = await tryPoster<ClanDetailsResponse>([
-        { url: `clan/${clanId}/kick/${userId}` },
-        { url: `clan/${clanId}/kick`, options: { json: { user_id: userId } } },
-        { url: `clan/${clanId}/member/${userId}/kick` },
+      const updated = await tryRequests<ClanDetailsResponse>([
+        { method: "post", url: `clan/${clanId}/kick/${userId}` },
+        { method: "post", url: `clan/${clanId}/kick`, options: { json: { user_id: userId } } },
+        { method: "post", url: `clan/${clanId}/member/${userId}/kick` },
+        { method: "post", url: `clan/${clanId}/members/${userId}/kick` },
+        { method: "post", url: `clan/kick/${clanId}/${userId}` },
+        { method: "delete", url: `clan/${clanId}/kick/${userId}` },
+        { method: "delete", url: `clan/${clanId}/member/${userId}` },
+        { method: "delete", url: `clan/${clanId}/members/${userId}` },
       ]);
 
-      await clanQuery.mutate(updated, { revalidate: false });
+      if (updated?.clan) {
+        await clanQuery.mutate(updated, { revalidate: false });
+      }
+      else {
+        await clanQuery.mutate();
+      }
 
       toast({
         title: t("manage.kicked"),
