@@ -36,7 +36,8 @@
         "rules": "правила",
         "apiDocs": "документация API",
         "discordServer": "discord сервер",
-        "supportUs": "поддержать нас"
+        "supportUs": "поддержать нас",
+        "clans": "кланы"
       }
     },
     "headerLoginDialog": {
@@ -108,7 +109,8 @@
         "rules": "Правила",
         "apiDocs": "Документация API",
         "discordServer": "Discord-сервер",
-        "supportUs": "Поддержать нас"
+        "supportUs": "Поддержать нас",
+        "clans": "Кланы"
       },
       "yourProfile": "Ваш профиль",
       "friends": "Друзья",
@@ -894,6 +896,49 @@
           },
           "tooltip": "{value} {type}"
         }
+      }
+    },
+    "clans": {
+      "meta": {
+        "title": "Кланы | {appName}"
+      },
+      "header": "Кланы",
+      "createHeader": "Создать клан",
+      "pagination": {
+        "previous": "Назад",
+        "next": "Вперёд",
+        "pageOf": "Страница {page} / {maxPages}"
+      },
+      "labels": {
+        "created": "Создан",
+        "totalPp": "Общий PP"
+      },
+      "form": {
+        "namePlaceholder": "Название клана",
+        "avatarFromComputer": "Аватар клана (загрузка с компьютера)",
+        "create": "Создать",
+        "avatarTooLarge": "Аватар слишком большой. Выберите изображение меньшего размера.",
+        "createFailed": "Не удалось создать клан"
+      }
+    },
+    "clansDetails": {
+      "meta": {
+        "title": "Клан | {appName}"
+      },
+      "fallbackTitle": "Клан",
+      "labels": {
+        "totalPp": "Общий PP",
+        "created": "Создан"
+      },
+      "roles": {
+        "creator": "Создатель",
+        "member": "Участник"
+      },
+      "suffix": {
+        "pp": "pp"
+      },
+      "errors": {
+        "notFound": "Клан не найден."
       }
     }
   }

@@ -36,7 +36,8 @@
         "rules": "reglas",
         "apiDocs": "documentación de la API",
         "discordServer": "servidor de Discord",
-        "supportUs": "apóyanos"
+        "supportUs": "apóyanos",
+        "clans": "clanes"
       }
     },
     "headerLoginDialog": {
@@ -108,7 +109,8 @@
         "rules": "Reglas",
         "apiDocs": "Documentación de la API",
         "discordServer": "Servidor de Discord",
-        "supportUs": "Apóyanos"
+        "supportUs": "Apóyanos",
+        "clans": "Clanes"
       },
       "yourProfile": "Tu perfil",
       "friends": "Amigos",
@@ -897,6 +899,49 @@
           },
           "tooltip": "{value} {type}"
         }
+      }
+    },
+    "clans": {
+      "meta": {
+        "title": "Clanes | {appName}"
+      },
+      "header": "Clanes",
+      "createHeader": "Crear clan",
+      "pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "pageOf": "Página {page} / {maxPages}"
+      },
+      "labels": {
+        "created": "Creado",
+        "totalPp": "PP total"
+      },
+      "form": {
+        "namePlaceholder": "Nombre del clan",
+        "avatarFromComputer": "Avatar del clan (subir desde tu ordenador)",
+        "create": "Crear",
+        "avatarTooLarge": "El avatar es demasiado grande. Elige una imagen más pequeña.",
+        "createFailed": "No se pudo crear el clan"
+      }
+    },
+    "clansDetails": {
+      "meta": {
+        "title": "Detalles del clan | {appName}"
+      },
+      "fallbackTitle": "Clan",
+      "labels": {
+        "totalPp": "PP total",
+        "created": "Creado"
+      },
+      "roles": {
+        "creator": "Creador",
+        "member": "Miembro"
+      },
+      "suffix": {
+        "pp": "pp"
+      },
+      "errors": {
+        "notFound": "Clan no encontrado."
       }
     }
   }
