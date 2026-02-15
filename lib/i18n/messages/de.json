@@ -880,6 +880,7 @@
           "badges": {
             "Developer": "Entwickler",
             "Admin": "Admin",
+            "Moderator": "Moderator",
             "Bat": "BAT",
             "Bot": "Bot",
             "Supporter": "Supporter"
