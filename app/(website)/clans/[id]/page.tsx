@@ -91,6 +91,7 @@ async function tryRequests<T>(
     url: string;
     options?: Parameters<typeof poster>[1];
   }>,
+  debugLabel?: string,
 ): Promise<T | null> {
   let lastError: unknown;
 
@@ -100,6 +101,13 @@ async function tryRequests<T>(
     }
     catch (error) {
       lastError = error;
+
+      if (debugLabel) {
+        console.warn(
+          `[${debugLabel}] ${attempt.method ?? "post".toUpperCase()} ${attempt.url} failed`,
+          error,
+        );
+      }
     }
   }
 
@@ -164,16 +172,36 @@ export default function ClanDetailsPage() {
   const leaveClan = async () => {
     setIsLeaveLoading(true);
 
+    const leaveAttempts: Array<{
+      method?: "post" | "delete";
+      url: string;
+      options?: Parameters<typeof poster>[1];
+    }> = [
+      { method: "post", url: `clan/${clanId}/leave` },
+      { method: "post", url: `clan/leave/${clanId}` },
+      { method: "post", url: `clan/leave`, options: { json: { clan_id: clanId } } },
+      { method: "post", url: `clan/${clanId}/quit` },
+      { method: "post", url: `clan/${clanId}/exit` },
+      { method: "post", url: `clan/quit/${clanId}` },
+      { method: "post", url: `clan/exit/${clanId}` },
+      { method: "post", url: `clan/${clanId}/member/leave` },
+      { method: "post", url: `clan/${clanId}/members/leave` },
+      { method: "delete", url: `clan/${clanId}/leave` },
+      { method: "delete", url: `clan/leave/${clanId}` },
+      { method: "delete", url: `clan/${clanId}/member/self` },
+      { method: "delete", url: `clan/${clanId}/members/me` },
+    ];
+
+    if (self?.user_id) {
+      leaveAttempts.push(
+        { method: "delete", url: `clan/${clanId}/member/${self.user_id}` },
+        { method: "delete", url: `clan/${clanId}/members/${self.user_id}` },
+        { method: "post", url: `clan/${clanId}/leave`, options: { json: { user_id: self.user_id } } },
+      );
+    }
+
     try {
-      await tryRequests([
-        { method: "post", url: `clan/${clanId}/leave` },
-        { method: "post", url: `clan/leave/${clanId}` },
-        { method: "post", url: `clan/leave`, options: { json: { clan_id: clanId } } },
-        { method: "delete", url: `clan/${clanId}/leave` },
-        { method: "delete", url: `clan/leave/${clanId}` },
-        { method: "delete", url: `clan/${clanId}/member/self` },
-        { method: "delete", url: `clan/${clanId}/members/me` },
-      ]);
+      await tryRequests(leaveAttempts, "leaveClan");
 
       toast({
         title: t("leave.left"),
@@ -183,6 +211,12 @@ export default function ClanDetailsPage() {
       router.push("/clans");
     }
     catch (error) {
+      console.error("[leaveClan] all leave attempts failed", {
+        clanId,
+        attempts: leaveAttempts.map(attempt => `${(attempt.method ?? "post").toUpperCase()} ${attempt.url}`),
+        error,
+      });
+
       toast({
         title: error instanceof Error ? error.message : t("leave.unavailable"),
         variant: "destructive",
