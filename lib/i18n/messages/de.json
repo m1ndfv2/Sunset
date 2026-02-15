@@ -36,8 +36,7 @@
         "rules": "regeln",
         "apiDocs": "api-doku",
         "discordServer": "discord-server",
-        "supportUs": "unterstütze uns",
-        "clans": "clans"
+        "supportUs": "unterstütze uns"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "Regeln",
         "apiDocs": "API-Doku",
         "discordServer": "Discord-Server",
-        "supportUs": "Unterstütze uns",
-        "clans": "Clans"
+        "supportUs": "Unterstütze uns"
       },
       "yourProfile": "Dein Profil",
       "friends": "Freunde",
@@ -880,6 +878,7 @@
           "badges": {
             "Developer": "Entwickler",
             "Admin": "Admin",
+            "Moderator": "Moderator",
             "Bat": "BAT",
             "Bot": "Bot",
             "Supporter": "Supporter"
@@ -898,49 +897,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Clans | {appName}"
-      },
-      "header": "Clans",
-      "createHeader": "Clan erstellen",
-      "pagination": {
-        "previous": "Zurück",
-        "next": "Weiter",
-        "pageOf": "Seite {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Erstellt",
-        "totalPp": "Gesamt-PP"
-      },
-      "form": {
-        "namePlaceholder": "Clanname",
-        "avatarFromComputer": "Clan-Avatar (vom Computer hochladen)",
-        "create": "Erstellen",
-        "avatarTooLarge": "Avatar ist zu groß. Bitte wähle ein kleineres Bild.",
-        "createFailed": "Clan konnte nicht erstellt werden"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Clan-Details | {appName}"
-      },
-      "fallbackTitle": "Clan",
-      "labels": {
-        "totalPp": "Gesamt-PP",
-        "created": "Erstellt"
-      },
-      "roles": {
-        "creator": "Ersteller",
-        "member": "Mitglied"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Clan nicht gefunden."
       }
     }
   }

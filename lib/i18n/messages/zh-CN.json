@@ -36,8 +36,7 @@
         "rules": "规章制度",
         "apiDocs": "API 文档",
         "discordServer": "Discord 服务器",
-        "supportUs": "支持我们",
-        "clans": "战队"
+        "supportUs": "支持我们"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "规章制度",
         "apiDocs": "API 文档",
         "discordServer": "Discord 服务器",
-        "supportUs": "支持我们",
-        "clans": "战队"
+        "supportUs": "支持我们"
       },
       "yourProfile": "你的资料",
       "friends": "好友",
@@ -880,6 +878,7 @@
           "badges": {
             "Developer": "开发者",
             "Admin": "管理员",
+            "Moderator": "版主",
             "Bat": "BAT",
             "Bot": "机器人",
             "Supporter": "支持者"
@@ -898,49 +897,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "战队 | {appName}"
-      },
-      "header": "战队",
-      "createHeader": "创建战队",
-      "pagination": {
-        "previous": "上一页",
-        "next": "下一页",
-        "pageOf": "第 {page} / {maxPages} 页"
-      },
-      "labels": {
-        "created": "创建于",
-        "totalPp": "总 PP"
-      },
-      "form": {
-        "namePlaceholder": "战队名称",
-        "avatarFromComputer": "战队头像（从电脑上传）",
-        "create": "创建",
-        "avatarTooLarge": "头像过大，请选择更小的图片。",
-        "createFailed": "创建战队失败"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "战队详情 | {appName}"
-      },
-      "fallbackTitle": "战队",
-      "labels": {
-        "totalPp": "总 PP",
-        "created": "创建于"
-      },
-      "roles": {
-        "creator": "创建者",
-        "member": "成员"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "未找到该战队。"
       }
     }
   }

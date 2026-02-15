@@ -36,8 +36,7 @@
         "rules": "rules",
         "apiDocs": "api docs",
         "discordServer": "discowd sewvew",
-        "supportUs": "support us",
-        "clans": "clans"
+        "supportUs": "support us"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "Rules",
         "apiDocs": "api docs",
         "discordServer": "discowd sewvew",
-        "supportUs": "Support Us",
-        "clans": "Clans"
+        "supportUs": "Support Us"
       },
       "yourProfile": "Youww pwofiwe",
       "friends": "fwiends",
@@ -884,6 +882,7 @@
           "badges": {
             "Developer": "Devewoper",
             "Admin": "Admin",
+            "Moderator": "mowdewatow",
             "Bat": "BAT",
             "Bot": "Bot",
             "Supporter": "Suppowter"
@@ -902,49 +901,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Clans | {appName}"
-      },
-      "header": "Clans",
-      "createHeader": "Create clan",
-      "pagination": {
-        "previous": "Previous",
-        "next": "Next",
-        "pageOf": "Page {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Created",
-        "totalPp": "Total PP"
-      },
-      "form": {
-        "namePlaceholder": "Clan name",
-        "avatarFromComputer": "Clan avatar (upload from your computer)",
-        "create": "Create",
-        "avatarTooLarge": "Avatar is too large. Please choose a smaller image.",
-        "createFailed": "Failed to create clan"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Clan details | {appName}"
-      },
-      "fallbackTitle": "Clan",
-      "labels": {
-        "totalPp": "Total PP",
-        "created": "Created"
-      },
-      "roles": {
-        "creator": "Creator",
-        "member": "Member"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Clan not found."
       }
     }
   }

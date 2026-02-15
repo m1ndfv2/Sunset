@@ -36,8 +36,7 @@
         "rules": "ルール",
         "apiDocs": "APIドキュメント",
         "discordServer": "Discordサーバー",
-        "supportUs": "支援する",
-        "clans": "クラン"
+        "supportUs": "支援する"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "ルール",
         "apiDocs": "APIドキュメント",
         "discordServer": "Discordサーバー",
-        "supportUs": "支援する",
-        "clans": "クラン"
+        "supportUs": "支援する"
       },
       "yourProfile": "あなたのプロフィール",
       "friends": "フレンド",
@@ -880,6 +878,7 @@
           "badges": {
             "Developer": "開発者",
             "Admin": "管理者",
+            "Moderator": "モデレーター",
             "Bat": "BAT",
             "Bot": "ボット",
             "Supporter": "サポーター"
@@ -898,49 +897,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "クラン | {appName}"
-      },
-      "header": "クラン",
-      "createHeader": "クラン作成",
-      "pagination": {
-        "previous": "前へ",
-        "next": "次へ",
-        "pageOf": "{page} / {maxPages} ページ"
-      },
-      "labels": {
-        "created": "作成日",
-        "totalPp": "合計PP"
-      },
-      "form": {
-        "namePlaceholder": "クラン名",
-        "avatarFromComputer": "クランアバター（PCからアップロード）",
-        "create": "作成",
-        "avatarTooLarge": "アバターが大きすぎます。より小さい画像を選択してください。",
-        "createFailed": "クランを作成できませんでした"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "クラン詳細 | {appName}"
-      },
-      "fallbackTitle": "クラン",
-      "labels": {
-        "totalPp": "合計PP",
-        "created": "作成日"
-      },
-      "roles": {
-        "creator": "作成者",
-        "member": "メンバー"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "クランが見つかりません。"
       }
     }
   }

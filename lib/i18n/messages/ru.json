@@ -36,8 +36,7 @@
         "rules": "правила",
         "apiDocs": "документация API",
         "discordServer": "discord сервер",
-        "supportUs": "поддержать нас",
-        "clans": "кланы"
+        "supportUs": "поддержать нас"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "Правила",
         "apiDocs": "Документация API",
         "discordServer": "Discord-сервер",
-        "supportUs": "Поддержать нас",
-        "clans": "Кланы"
+        "supportUs": "Поддержать нас"
       },
       "yourProfile": "Ваш профиль",
       "friends": "Друзья",
@@ -877,6 +875,7 @@
           "badges": {
             "Developer": "Разработчик",
             "Admin": "Администратор",
+            "Moderator": "Модератор",
             "Bat": "BAT",
             "Bot": "Бот",
             "Supporter": "Поддерживающий"
@@ -895,49 +894,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Кланы | {appName}"
-      },
-      "header": "Кланы",
-      "createHeader": "Создать клан",
-      "pagination": {
-        "previous": "Назад",
-        "next": "Вперёд",
-        "pageOf": "Страница {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Создан",
-        "totalPp": "Общий PP"
-      },
-      "form": {
-        "namePlaceholder": "Название клана",
-        "avatarFromComputer": "Аватар клана (загрузка с компьютера)",
-        "create": "Создать",
-        "avatarTooLarge": "Аватар слишком большой. Выберите изображение меньшего размера.",
-        "createFailed": "Не удалось создать клан"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Клан | {appName}"
-      },
-      "fallbackTitle": "Клан",
-      "labels": {
-        "totalPp": "Общий PP",
-        "created": "Создан"
-      },
-      "roles": {
-        "creator": "Создатель",
-        "member": "Участник"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Клан не найден."
       }
     }
   }

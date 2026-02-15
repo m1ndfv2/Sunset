@@ -105,8 +105,7 @@
         "supportUs": {
           "text": "support us",
           "context": "Help dropdown menu item for support page"
-        },
-        "clans": "clans"
+        }
       }
     },
     "headerLoginDialog": {
@@ -316,8 +315,7 @@
         "supportUs": {
           "text": "Support Us",
           "context": "Mobile drawer navigation item for support page"
-        },
-        "clans": "Clans"
+        }
       },
       "yourProfile": {
         "text": "Your profile",
@@ -2318,6 +2316,10 @@
               "text": "Admin",
               "context": "Name of the Admin badge"
             },
+             "Moderator": {
+            "text": "Moderator",
+            "context": "Name of the Moderator badge"
+            },
             "Bat": {
               "text": "BAT",
               "context": "Name of the BAT (Beatmap Appreciation Team) badge"
@@ -2366,49 +2368,6 @@
             "context": "Tooltip text showing chart value and type (pp/rank), includes value and type as parameters"
           }
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Clans | {appName}"
-      },
-      "header": "Clans",
-      "createHeader": "Create clan",
-      "pagination": {
-        "previous": "Previous",
-        "next": "Next",
-        "pageOf": "Page {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Created",
-        "totalPp": "Total PP"
-      },
-      "form": {
-        "namePlaceholder": "Clan name",
-        "avatarFromComputer": "Clan avatar (upload from your computer)",
-        "create": "Create",
-        "avatarTooLarge": "Avatar is too large. Please choose a smaller image.",
-        "createFailed": "Failed to create clan"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Clan details | {appName}"
-      },
-      "fallbackTitle": "Clan",
-      "labels": {
-        "totalPp": "Total PP",
-        "created": "Created"
-      },
-      "roles": {
-        "creator": "Creator",
-        "member": "Member"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Clan not found."
       }
     }
   }

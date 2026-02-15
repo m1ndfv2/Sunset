@@ -36,8 +36,7 @@
         "rules": "règles",
         "apiDocs": "documentation de l'API",
         "discordServer": "serveur Discord",
-        "supportUs": "nous soutenir",
-        "clans": "clans"
+        "supportUs": "nous soutenir"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "Règles",
         "apiDocs": "Documentation de l'API",
         "discordServer": "Serveur Discord",
-        "supportUs": "Nous soutenir",
-        "clans": "Clans"
+        "supportUs": "Nous soutenir"
       },
       "yourProfile": "Votre profil",
       "friends": "Amis",
@@ -880,6 +878,7 @@
           "badges": {
             "Developer": "Développeur",
             "Admin": "Admin",
+            "Moderator": "Modérateur",
             "Bat": "BAT",
             "Bot": "Bot",
             "Supporter": "Supporter"
@@ -898,49 +897,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Clans | {appName}"
-      },
-      "header": "Clans",
-      "createHeader": "Créer un clan",
-      "pagination": {
-        "previous": "Précédent",
-        "next": "Suivant",
-        "pageOf": "Page {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Créé",
-        "totalPp": "PP total"
-      },
-      "form": {
-        "namePlaceholder": "Nom du clan",
-        "avatarFromComputer": "Avatar du clan (téléverser depuis votre ordinateur)",
-        "create": "Créer",
-        "avatarTooLarge": "L’avatar est trop volumineux. Veuillez choisir une image plus petite.",
-        "createFailed": "Impossible de créer le clan"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Détails du clan | {appName}"
-      },
-      "fallbackTitle": "Clan",
-      "labels": {
-        "totalPp": "PP total",
-        "created": "Créé"
-      },
-      "roles": {
-        "creator": "Créateur",
-        "member": "Membre"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Clan introuvable."
       }
     }
   }

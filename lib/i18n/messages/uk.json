@@ -36,8 +36,7 @@
         "rules": "правила",
         "apiDocs": "документація API",
         "discordServer": "Discord сервер",
-        "supportUs": "підтримати нас",
-        "clans": "клани"
+        "supportUs": "підтримати нас"
       }
     },
     "headerLoginDialog": {
@@ -109,8 +108,7 @@
         "rules": "Правила",
         "apiDocs": "Документація API",
         "discordServer": "Discord Сервер",
-        "supportUs": "Підтримати нас",
-        "clans": "Клани"
+        "supportUs": "Підтримати нас"
       },
       "yourProfile": "Ваш профіль",
       "friends": "Друзі",
@@ -880,6 +878,7 @@
           "badges": {
             "Developer": "Розробник",
             "Admin": "Адміністратор",
+            "Moderator": "Модератор",
             "Bat": "BAT",
             "Bot": "Бот",
             "Supporter": "Супортер"
@@ -898,49 +897,6 @@
           },
           "tooltip": "{value} {type}"
         }
-      }
-    },
-    "clans": {
-      "meta": {
-        "title": "Клани | {appName}"
-      },
-      "header": "Клани",
-      "createHeader": "Створити клан",
-      "pagination": {
-        "previous": "Назад",
-        "next": "Далі",
-        "pageOf": "Сторінка {page} / {maxPages}"
-      },
-      "labels": {
-        "created": "Створено",
-        "totalPp": "Загальний PP"
-      },
-      "form": {
-        "namePlaceholder": "Назва клану",
-        "avatarFromComputer": "Аватар клану (завантаження з комп’ютера)",
-        "create": "Створити",
-        "avatarTooLarge": "Аватар завеликий. Оберіть зображення меншого розміру.",
-        "createFailed": "Не вдалося створити клан"
-      }
-    },
-    "clansDetails": {
-      "meta": {
-        "title": "Клан | {appName}"
-      },
-      "fallbackTitle": "Клан",
-      "labels": {
-        "totalPp": "Загальний PP",
-        "created": "Створено"
-      },
-      "roles": {
-        "creator": "Засновник",
-        "member": "Учасник"
-      },
-      "suffix": {
-        "pp": "pp"
-      },
-      "errors": {
-        "notFound": "Клан не знайдено."
       }
     }
   }
