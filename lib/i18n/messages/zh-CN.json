@@ -880,6 +880,7 @@
           "badges": {
             "Developer": "开发者",
             "Admin": "管理员",
+            "Moderator": "版主",
             "Bat": "BAT",
             "Bot": "机器人",
             "Supporter": "支持者"

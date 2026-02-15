@@ -877,6 +877,7 @@
           "badges": {
             "Developer": "Разработчик",
             "Admin": "Администратор",
+            "Moderator": "Модератор",
             "Bat": "BAT",
             "Bot": "Бот",
             "Supporter": "Поддерживающий"

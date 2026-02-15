@@ -8,6 +8,9 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
+import { Crown, Shield, User } from "lucide-react";
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import GameModeSelector from "@/components/GameModeSelector";
@@ -20,6 +23,8 @@ import { useClan } from "@/lib/hooks/api/clan/useClan";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import poster from "@/lib/services/poster";
+import { useClan } from "@/lib/hooks/api/clan/useClan";
+import { useT } from "@/lib/i18n/utils";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
@@ -32,6 +37,7 @@ export default function ClanDetailsPage() {
   const { toast } = useToast();
   const { self } = useSelf();
 
+  const searchParams = useSearchParams();
   const t = useT("pages.clansDetails");
 
   const mode = searchParams.get("mode") ?? GameMode.STANDARD;
