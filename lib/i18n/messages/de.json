@@ -942,6 +942,25 @@
       },
       "errors": {
         "notFound": "Clan nicht gefunden."
+      },
+      "leave": {
+        "hint": "Du kannst diesen Clan jederzeit verlassen.",
+        "action": "Clan verlassen",
+        "left": "Du hast den Clan verlassen",
+        "unavailable": "Clan konnte nicht verlassen werden"
+      },
+      "manage": {
+        "header": "Clan-Verwaltung",
+        "descriptionLabel": "Clan-Beschreibung",
+        "descriptionPlaceholder": "Clan-Beschreibung eingeben...",
+        "avatarLabel": "Clan-Avatar",
+        "save": "Änderungen speichern",
+        "saved": "Clan aktualisiert",
+        "updateFailed": "Clan konnte nicht aktualisiert werden",
+        "kick": "Rauswerfen",
+        "kicked": "Mitglied aus Clan entfernt",
+        "kickFailed": "Mitglied konnte nicht entfernt werden",
+        "onlyCreatorCanKick": "Nur der Clan-Ersteller kann Mitglieder entfernen"
       }
     }
   }

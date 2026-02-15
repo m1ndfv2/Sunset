@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 
 import GameModeSelector from "@/components/GameModeSelector";
+import ImageSelect from "@/components/General/ImageSelect";
 import PrettyHeader from "@/components/General/PrettyHeader";
 import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
@@ -24,6 +25,44 @@ import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
+
+async function fileToDataUrl(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  const maxSide = 128;
+  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
+
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx)
+    throw new Error("Failed to process image");
+
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+  const dataUrl = canvas.toDataURL("image/webp", 0.8);
+  bitmap.close();
+
+  return dataUrl;
+}
+
+async function tryPoster<T>(
+  attempts: Array<{ url: string; options?: Parameters<typeof poster>[1] }>,
+): Promise<T> {
+  let lastError: unknown;
+
+  for (const attempt of attempts) {
+    try {
+      return await poster<T>(attempt.url, attempt.options);
+    }
+    catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
+}
 
 export default function ClanDetailsPage() {
   const params = useParams<{ id: string }>();
@@ -42,6 +81,8 @@ export default function ClanDetailsPage() {
 
   const [isJoinLoading, setIsJoinLoading] = useState(false);
   const [isLeaveLoading, setIsLeaveLoading] = useState(false);
+  const [isSavingClan, setIsSavingClan] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -82,7 +123,10 @@ export default function ClanDetailsPage() {
     setIsLeaveLoading(true);
 
     try {
-      await poster(`clan/${clanId}/leave`, {});
+      await tryPoster([
+        { url: `clan/${clanId}/leave` },
+        { url: `clan/leave/${clanId}` },
+      ]);
 
       toast({
         title: t("leave.left"),
@@ -101,6 +145,74 @@ export default function ClanDetailsPage() {
       setIsLeaveLoading(false);
     }
   };
+
+  const saveClanProfile = async () => {
+    if (!isCreator)
+      return;
+
+    setIsSavingClan(true);
+    try {
+      const encodedAvatar = avatarFile ? await fileToDataUrl(avatarFile) : undefined;
+
+      const payload = {
+        avatar_url: encodedAvatar,
+      };
+
+      const updated = await tryPoster<ClanDetailsResponse>([
+        { url: `clan/${clanId}/edit`, options: { json: payload } },
+        { url: `clan/${clanId}/update`, options: { json: payload } },
+        { url: `clan/${clanId}`, options: { json: payload } },
+      ]);
+
+      await clanQuery.mutate(updated, { revalidate: false });
+
+      toast({
+        title: t("manage.saved"),
+        variant: "success",
+      });
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsSavingClan(false);
+    }
+  };
+
+  const kickMember = async (userId: number) => {
+    if (!isCreator || !isMember) {
+      toast({
+        title: t("manage.onlyCreatorCanKick"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const updated = await tryPoster<ClanDetailsResponse>([
+        { url: `clan/${clanId}/kick/${userId}` },
+        { url: `clan/${clanId}/kick`, options: { json: { user_id: userId } } },
+        { url: `clan/${clanId}/member/${userId}/kick` },
+      ]);
+
+      await clanQuery.mutate(updated, { revalidate: false });
+
+      toast({
+        title: t("manage.kicked"),
+        variant: "success",
+      });
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.kickFailed"),
+        variant: "destructive",
+      });
+    }
+  };
+
   const acceptInvite = async () => {
     setIsJoinLoading(true);
 
@@ -176,12 +288,26 @@ export default function ClanDetailsPage() {
                       </div>
 
                       {isCreator && (
-                        <div className="rounded-xl border border-dashed p-3">
-                          <p className="mb-2 text-sm text-muted-foreground">{t("invite.creatorHint")}</p>
+                        <div className="space-y-3 rounded-xl border border-dashed p-3">
+                          <p className="text-sm text-muted-foreground">{t("invite.creatorHint")}</p>
                           <Button onClick={createInviteLink} variant="secondary">
                             <UserPlus size={16} />
                             {t("invite.copyInviteLink")}
                           </Button>
+
+                          <div className="space-y-2 pt-2">
+                            <p className="text-sm text-muted-foreground">{t("manage.header")}</p>
+                            <label className="text-xs text-muted-foreground">{t("manage.avatarLabel")}</label>
+                            <ImageSelect
+                              setFile={setAvatarFile}
+                              file={avatarFile}
+                              maxFileSizeBytes={2 * 1024 * 1024}
+                            />
+
+                            <Button onClick={saveClanProfile} isLoading={isSavingClan}>
+                              {t("manage.save")}
+                            </Button>
+                          </div>
                         </div>
                       )}
 
@@ -238,7 +364,19 @@ export default function ClanDetailsPage() {
                               </div>
                             </div>
 
-                            <p className="font-medium">{numberWith(Math.round(member.pp))}{t("suffix.pp")}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{numberWith(Math.round(member.pp))}{t("suffix.pp")}</p>
+                              {isCreator && member.role !== "creator" && (
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => kickMember(member.user.user_id)}
+                                  disabled={!isCreator || !isMember}
+                                >
+                                  {t("manage.kick")}
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>

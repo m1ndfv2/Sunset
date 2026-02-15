@@ -942,6 +942,25 @@
       },
       "errors": {
         "notFound": "未找到该战队。"
+      },
+      "leave": {
+        "hint": "你可以随时退出该战队。",
+        "action": "退出战队",
+        "left": "你已退出战队",
+        "unavailable": "无法退出战队"
+      },
+      "manage": {
+        "header": "战队管理",
+        "descriptionLabel": "战队简介",
+        "descriptionPlaceholder": "输入战队简介...",
+        "avatarLabel": "战队头像",
+        "save": "保存更改",
+        "saved": "战队已更新",
+        "updateFailed": "无法更新战队",
+        "kick": "移除",
+        "kicked": "成员已被移出战队",
+        "kickFailed": "无法移除成员",
+        "onlyCreatorCanKick": "只有公会创建者可以移除成员"
       }
     }
   }

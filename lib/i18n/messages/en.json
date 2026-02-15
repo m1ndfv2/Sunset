@@ -2430,6 +2430,19 @@
         "action": "Leave clan",
         "left": "You left the clan",
         "unavailable": "Could not leave clan"
+      },
+      "manage": {
+        "header": "Clan management",
+        "descriptionLabel": "Clan description",
+        "descriptionPlaceholder": "Enter clan description...",
+        "avatarLabel": "Clan avatar",
+        "save": "Save changes",
+        "saved": "Clan updated",
+        "updateFailed": "Could not update clan",
+        "kick": "Kick",
+        "kicked": "Member removed from clan",
+        "kickFailed": "Could not remove member",
+        "onlyCreatorCanKick": "Only the clan creator can kick members"
       }
     }
   }

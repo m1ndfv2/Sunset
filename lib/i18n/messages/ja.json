@@ -942,6 +942,25 @@
       },
       "errors": {
         "notFound": "クランが見つかりません。"
+      },
+      "leave": {
+        "hint": "このクランはいつでも脱退できます。",
+        "action": "クランを脱退",
+        "left": "クランを脱退しました",
+        "unavailable": "クランを脱退できませんでした"
+      },
+      "manage": {
+        "header": "クラン管理",
+        "descriptionLabel": "クラン説明",
+        "descriptionPlaceholder": "クラン説明を入力...",
+        "avatarLabel": "クランアバター",
+        "save": "変更を保存",
+        "saved": "クランを更新しました",
+        "updateFailed": "クランを更新できませんでした",
+        "kick": "追放",
+        "kicked": "メンバーをクランから削除しました",
+        "kickFailed": "メンバーを削除できませんでした",
+        "onlyCreatorCanKick": "クラン作成者のみメンバーをキックできます"
       }
     }
   }

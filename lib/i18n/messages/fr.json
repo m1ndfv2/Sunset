@@ -942,6 +942,25 @@
       },
       "errors": {
         "notFound": "Clan introuvable."
+      },
+      "leave": {
+        "hint": "Vous pouvez quitter ce clan à tout moment.",
+        "action": "Quitter le clan",
+        "left": "Vous avez quitté le clan",
+        "unavailable": "Impossible de quitter le clan"
+      },
+      "manage": {
+        "header": "Gestion du clan",
+        "descriptionLabel": "Description du clan",
+        "descriptionPlaceholder": "Saisissez la description du clan...",
+        "avatarLabel": "Avatar du clan",
+        "save": "Enregistrer les modifications",
+        "saved": "Clan mis à jour",
+        "updateFailed": "Impossible de mettre à jour le clan",
+        "kick": "Exclure",
+        "kicked": "Membre exclu du clan",
+        "kickFailed": "Impossible d’exclure le membre",
+        "onlyCreatorCanKick": "Seul le créateur du clan peut exclure des membres"
       }
     }
   }
