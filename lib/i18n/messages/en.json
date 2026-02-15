@@ -2318,6 +2318,10 @@
               "text": "Admin",
               "context": "Name of the Admin badge"
             },
+             "Moderator": {
+            "text": "Moderator",
+            "context": "Name of the Moderator badge"
+            },
             "Bat": {
               "text": "BAT",
               "context": "Name of the BAT (Beatmap Appreciation Team) badge"
