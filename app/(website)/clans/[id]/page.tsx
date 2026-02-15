@@ -1,5 +1,13 @@
 "use client";
 
+import { Crown, Shield, User, UserPlus } from "lucide-react";
+import Link from "next/link";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { Crown, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -9,6 +17,12 @@ import GameModeSelector from "@/components/GameModeSelector";
 import PrettyHeader from "@/components/General/PrettyHeader";
 import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useClan } from "@/lib/hooks/api/clan/useClan";
+import useSelf from "@/lib/hooks/useSelf";
+import { useT } from "@/lib/i18n/utils";
+import poster from "@/lib/services/poster";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import { useT } from "@/lib/i18n/utils";
 import { GameMode } from "@/lib/types/api";
@@ -17,6 +31,12 @@ import { isInstance } from "@/lib/utils/type.util";
 
 export default function ClanDetailsPage() {
   const params = useParams<{ id: string }>();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+  const { self } = useSelf();
+
   const searchParams = useSearchParams();
   const t = useT("pages.clansDetails");
 
@@ -25,11 +45,68 @@ export default function ClanDetailsPage() {
     () => (isInstance(mode, GameMode) ? (mode as GameMode) : GameMode.STANDARD),
   );
 
+  const [isJoinLoading, setIsJoinLoading] = useState(false);
+
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
 
   const clan = clanQuery.data?.clan;
   const members = clanQuery.data?.members ?? [];
+
+  const inviteMode = searchParams.get("invite") === "1";
+
+  const selfMembership = members.find(m => m.user.user_id === self?.user_id);
+
+  const isCreator = selfMembership?.role === "creator";
+  const isMember = Boolean(selfMembership);
+
+  const createInviteLink = async () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("invite", "1");
+
+    const link = `${window.location.origin}${pathname}?${params.toString()}`;
+
+    await navigator.clipboard.writeText(link);
+
+    toast({
+      title: t("invite.linkCopied"),
+      variant: "success",
+    });
+  };
+
+  const closeInvitePrompt = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("invite");
+
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname);
+  };
+
+  const acceptInvite = async () => {
+    setIsJoinLoading(true);
+
+    try {
+      await poster(`clan/${clanId}/join`, {});
+
+      toast({
+        title: t("invite.joined"),
+        variant: "success",
+      });
+
+      closeInvitePrompt();
+      await clanQuery.mutate();
+    }
+    catch {
+      toast({
+        title: t("invite.joinUnavailable"),
+        description: t("invite.joinUnavailableHint"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsJoinLoading(false);
+    }
+  };
 
   return (
     <div className="flex w-full flex-col space-y-4">
@@ -79,6 +156,30 @@ export default function ClanDetailsPage() {
                           </p>
                         </div>
                       </div>
+
+                      {isCreator && (
+                        <div className="rounded-xl border border-dashed p-3">
+                          <p className="mb-2 text-sm text-muted-foreground">{t("invite.creatorHint")}</p>
+                          <Button onClick={createInviteLink} variant="secondary">
+                            <UserPlus size={16} />
+                            {t("invite.copyInviteLink")}
+                          </Button>
+                        </div>
+                      )}
+
+                      {inviteMode && !isMember && self && (
+                        <div className="rounded-xl border p-3">
+                          <p className="mb-3 text-sm">{t("invite.prompt")}</p>
+                          <div className="flex flex-wrap gap-2">
+                            <Button onClick={acceptInvite} isLoading={isJoinLoading}>
+                              {t("invite.accept")}
+                            </Button>
+                            <Button onClick={closeInvitePrompt} variant="secondary">
+                              {t("invite.decline")}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="space-y-2">
                         {members.map((member, index) => (

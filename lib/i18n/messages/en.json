@@ -2413,6 +2413,17 @@
       },
       "errors": {
         "notFound": "Clan not found."
+      },
+      "invite": {
+        "creatorHint": "Invite players to your clan using a shareable link.",
+        "copyInviteLink": "Copy invite link",
+        "linkCopied": "Invite link copied",
+        "prompt": "You were invited to this clan. Do you want to join?",
+        "accept": "Join clan",
+        "decline": "Decline",
+        "joined": "You joined the clan",
+        "joinUnavailable": "Could not join clan",
+        "joinUnavailableHint": "The server does not support invite acceptance endpoint yet."
       }
     }
   }

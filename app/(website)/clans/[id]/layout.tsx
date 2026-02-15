@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+
+import { getT } from "@/lib/i18n/utils";
+
 
 import { getT } from "@/lib/i18n/utils";
 
@@ -15,4 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export default function ClanDetailsLayout({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
 export default Page;
