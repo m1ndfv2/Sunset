@@ -36,7 +36,8 @@
         "rules": "règles",
         "apiDocs": "documentation de l'API",
         "discordServer": "serveur Discord",
-        "supportUs": "nous soutenir"
+        "supportUs": "nous soutenir",
+        "clans": "clans"
       }
     },
     "headerLoginDialog": {
@@ -108,7 +109,8 @@
         "rules": "Règles",
         "apiDocs": "Documentation de l'API",
         "discordServer": "Serveur Discord",
-        "supportUs": "Nous soutenir"
+        "supportUs": "Nous soutenir",
+        "clans": "Clans"
       },
       "yourProfile": "Votre profil",
       "friends": "Amis",
@@ -896,6 +898,68 @@
           },
           "tooltip": "{value} {type}"
         }
+      }
+    },
+    "clans": {
+      "meta": {
+        "title": "Clans | {appName}"
+      },
+      "header": "Clans",
+      "createHeader": "Créer un clan",
+      "pagination": {
+        "previous": "Précédent",
+        "next": "Suivant",
+        "pageOf": "Page {page} / {maxPages}"
+      },
+      "labels": {
+        "created": "Créé",
+        "totalPp": "PP total"
+      },
+      "form": {
+        "namePlaceholder": "Nom du clan",
+        "avatarFromComputer": "Avatar du clan (téléverser depuis votre ordinateur)",
+        "create": "Créer",
+        "avatarTooLarge": "L’avatar est trop volumineux. Veuillez choisir une image plus petite.",
+        "createFailed": "Impossible de créer le clan"
+      }
+    },
+    "clansDetails": {
+      "meta": {
+        "title": "Détails du clan | {appName}"
+      },
+      "fallbackTitle": "Clan",
+      "labels": {
+        "totalPp": "PP total",
+        "created": "Créé"
+      },
+      "roles": {
+        "creator": "Créateur",
+        "member": "Membre"
+      },
+      "suffix": {
+        "pp": "pp"
+      },
+      "errors": {
+        "notFound": "Clan introuvable."
+      },
+      "leave": {
+        "hint": "Vous pouvez quitter ce clan à tout moment.",
+        "action": "Quitter le clan",
+        "left": "Vous avez quitté le clan",
+        "unavailable": "Impossible de quitter le clan"
+      },
+      "manage": {
+        "header": "Gestion du clan",
+        "descriptionLabel": "Description du clan",
+        "descriptionPlaceholder": "Saisissez la description du clan...",
+        "avatarLabel": "Avatar du clan",
+        "save": "Enregistrer les modifications",
+        "saved": "Clan mis à jour",
+        "updateFailed": "Impossible de mettre à jour le clan",
+        "kick": "Exclure",
+        "kicked": "Membre exclu du clan",
+        "kickFailed": "Impossible d’exclure le membre",
+        "onlyCreatorCanKick": "Seul le créateur du clan peut exclure des membres"
       }
     }
   }

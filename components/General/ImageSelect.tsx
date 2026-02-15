@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useId } from "react";
 
 import Spinner from "@/components/Spinner";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -19,7 +20,7 @@ export default function ImageSelect({
   maxFileSizeBytes,
 }: Props) {
   const t = useT("components.imageSelect");
-  const uniqueId = Math.random().toString(36).slice(7);
+  const uniqueId = useId();
 
   const { toast } = useToast();
 
