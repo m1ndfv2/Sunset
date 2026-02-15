@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, Shield, User, UserPlus } from "lucide-react";
+import { Crown, LogOut, Shield, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import {
   useParams,
@@ -8,9 +8,6 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { Crown, Shield, User } from "lucide-react";
-import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import GameModeSelector from "@/components/GameModeSelector";
@@ -19,12 +16,11 @@ import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import poster from "@/lib/services/poster";
-import { useClan } from "@/lib/hooks/api/clan/useClan";
-import { useT } from "@/lib/i18n/utils";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
@@ -37,7 +33,6 @@ export default function ClanDetailsPage() {
   const { toast } = useToast();
   const { self } = useSelf();
 
-  const searchParams = useSearchParams();
   const t = useT("pages.clansDetails");
 
   const mode = searchParams.get("mode") ?? GameMode.STANDARD;
@@ -46,6 +41,7 @@ export default function ClanDetailsPage() {
   );
 
   const [isJoinLoading, setIsJoinLoading] = useState(false);
+  const [isLeaveLoading, setIsLeaveLoading] = useState(false);
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -82,11 +78,34 @@ export default function ClanDetailsPage() {
     router.replace(query ? `${pathname}?${query}` : pathname);
   };
 
+  const leaveClan = async () => {
+    setIsLeaveLoading(true);
+
+    try {
+      await poster(`clan/${clanId}/leave`, {});
+
+      toast({
+        title: t("leave.left"),
+        variant: "success",
+      });
+
+      router.push("/clans");
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("leave.unavailable"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsLeaveLoading(false);
+    }
+  };
   const acceptInvite = async () => {
     setIsJoinLoading(true);
 
     try {
-      await poster(`clan/${clanId}/join`, {});
+      const joinedClanDetails = await poster<ClanDetailsResponse>(`clan/${clanId}/join`, {});
 
       toast({
         title: t("invite.joined"),
@@ -94,12 +113,11 @@ export default function ClanDetailsPage() {
       });
 
       closeInvitePrompt();
-      await clanQuery.mutate();
+      await clanQuery.mutate(joinedClanDetails, { revalidate: false });
     }
-    catch {
+    catch (error) {
       toast({
-        title: t("invite.joinUnavailable"),
-        description: t("invite.joinUnavailableHint"),
+        title: error instanceof Error ? error.message : t("invite.joinUnavailable"),
         variant: "destructive",
       });
     }
@@ -178,6 +196,16 @@ export default function ClanDetailsPage() {
                               {t("invite.decline")}
                             </Button>
                           </div>
+                        </div>
+                      )}
+
+                      {isMember && (
+                        <div className="rounded-xl border p-3">
+                          <p className="mb-2 text-sm text-muted-foreground">{t("leave.hint")}</p>
+                          <Button onClick={leaveClan} isLoading={isLeaveLoading} variant="destructive">
+                            <LogOut size={16} />
+                            {t("leave.action")}
+                          </Button>
                         </div>
                       )}
 
