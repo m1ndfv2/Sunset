@@ -943,6 +943,17 @@
       "errors": {
         "notFound": "Clan introuvable."
       },
+      "invite": {
+        "creatorHint": "Invitez des joueurs dans votre clan avec un lien partageable.",
+        "copyInviteLink": "Copier le lien d’invitation",
+        "linkCopied": "Lien d’invitation copié",
+        "prompt": "Vous avez été invité dans ce clan. Voulez-vous le rejoindre ?",
+        "accept": "Rejoindre le clan",
+        "decline": "Refuser",
+        "joined": "Vous avez rejoint le clan",
+        "joinUnavailable": "Impossible de rejoindre le clan",
+        "joinUnavailableHint": "Le serveur ne prend pas encore en charge l’endpoint d’acceptation d’invitation."
+      },
       "leave": {
         "hint": "Vous pouvez quitter ce clan à tout moment.",
         "action": "Quitter le clan",

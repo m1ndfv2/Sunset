@@ -16,8 +16,10 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import useSelf from "@/lib/hooks/useSelf";
 import type { UserSensitiveResponse } from "@/lib/types/api";
 import { timeSince } from "@/lib/utils/timeSince";
+import { isUserHasAdminPrivilege } from "@/lib/utils/userPrivileges.util";
 
 export const SensitiveInfoContext = createContext<boolean>(false);
 
@@ -26,7 +28,9 @@ export default function AdminUserEditGeneral({
 }: {
   user: UserSensitiveResponse;
 }) {
+  const { self } = useSelf();
   const isUserOffline = user.user_status === "Offline";
+  const canEditAll = self ? isUserHasAdminPrivilege(self) : false;
 
   return (
     <SensitiveInfoContext value={true}>
@@ -116,11 +120,11 @@ export default function AdminUserEditGeneral({
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="space-y-4">
             <AdminUserBasicInfo user={user} />
-            <AdminUserImages user={user} />
+            {canEditAll && <AdminUserImages user={user} />}
           </div>
 
           <div className="space-y-4">
-            <AdminUserProfile user={user} />
+            {canEditAll && <AdminUserProfile user={user} />}
             <AdminUserConnections user={user} />
           </div>
         </div>

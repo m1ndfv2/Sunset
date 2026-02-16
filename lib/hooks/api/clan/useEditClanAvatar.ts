@@ -20,7 +20,7 @@ export async function editClanAvatar(payload: EditClanAvatarRequest) {
     return await patchClanAvatar(payload);
   }
   catch {
-    // Kept for compatibility: Sunrise exposes both PATCH and POST for this endpoint.
+    // Kept for compatibility: osum1nd exposes both PATCH and POST for this endpoint.
     return await poster<ClanDetailsResponse>("clan/avatar", {
       json: payload,
     });

@@ -947,6 +947,17 @@
       "errors": {
         "notFound": "Cwan not found."
       },
+      "invite": {
+        "creatorHint": "Invite pwayews to youw cwan using a shaweabwe wink.",
+        "copyInviteLink": "Copy invite wink",
+        "linkCopied": "Invite wink copied",
+        "prompt": "you wewe invited to this cwan. do u wanna join?",
+        "accept": "Join cwan",
+        "decline": "Decwine",
+        "joined": "you joined da cwan",
+        "joinUnavailable": "couwd not join cwan",
+        "joinUnavailableHint": "da sewvew does not suppowt invite acceptance endpoint yet."
+      },
       "leave": {
         "hint": "you can weave this cwan at any time.",
         "action": "Weave cwan",
