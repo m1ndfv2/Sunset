@@ -28,25 +28,43 @@ import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
 
+const CLAN_AVATAR_DATA_URL_MAX_LENGTH = 2048;
+const CLAN_AVATAR_TOO_LARGE_ERROR = "CLAN_AVATAR_TOO_LARGE_ERROR";
+
 async function fileToDataUrl(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement("canvas");
-  const maxSide = 128;
-  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
-
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
   const ctx = canvas.getContext("2d");
-  if (!ctx)
+
+  if (!ctx) {
+    bitmap.close();
     throw new Error("Failed to process image");
+  }
 
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const maxSides = [128, 96, 80, 64, 48, 40, 32];
+  const qualities = [0.82, 0.72, 0.62, 0.52, 0.42];
 
-  const dataUrl = canvas.toDataURL("image/webp", 0.8);
-  bitmap.close();
+  try {
+    for (const maxSide of maxSides) {
+      const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
 
-  return dataUrl;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      for (const quality of qualities) {
+        const dataUrl = canvas.toDataURL("image/webp", quality);
+        if (dataUrl.length <= CLAN_AVATAR_DATA_URL_MAX_LENGTH)
+          return dataUrl;
+      }
+    }
+  }
+  finally {
+    bitmap.close();
+  }
+
+  throw new Error(CLAN_AVATAR_TOO_LARGE_ERROR);
 }
 
 export default function ClanDetailsPage() {
@@ -58,6 +76,7 @@ export default function ClanDetailsPage() {
   const { self } = useSelf();
 
   const t = useT("pages.clansDetails");
+  const clansFormT = useT("pages.clans.form");
 
   const mode = searchParams.get("mode") ?? GameMode.STANDARD;
   const [activeMode, setActiveMode] = useState(
@@ -209,6 +228,15 @@ export default function ClanDetailsPage() {
         clanId,
         error,
       });
+
+      if (error instanceof Error && error.message === CLAN_AVATAR_TOO_LARGE_ERROR) {
+        toast({
+          title: clansFormT("avatarTooLarge"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: error instanceof Error ? error.message : t("manage.updateFailed"),
         variant: "destructive",
