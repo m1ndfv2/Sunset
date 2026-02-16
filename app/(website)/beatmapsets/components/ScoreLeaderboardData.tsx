@@ -16,12 +16,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserHoverCard from "@/components/UserHoverCard";
 import { useDownloadReplay } from "@/lib/hooks/api/score/useDownloadReplay";
+import { useUserClan } from "@/lib/hooks/api/user/useUserClan";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import type { BeatmapResponse, ScoreResponse } from "@/lib/types/api";
 import { getGradeColor } from "@/lib/utils/getGradeColor";
 import { timeSince } from "@/lib/utils/timeSince";
 import toPrettyDate from "@/lib/utils/toPrettyDate";
+
+function TopScoreUsername({
+  userId,
+  username,
+}: {
+  userId: number;
+  username: string;
+}) {
+  const clanQuery = useUserClan(userId);
+  const clanTag = clanQuery.data?.clan?.tag?.trim();
+
+  if (!clanTag)
+    return <span>{username}</span>;
+
+  if (username.startsWith(`[${clanTag}]`))
+    return <span>{username}</span>;
+
+  return <span>{`[${clanTag}]${username}`}</span>;
+}
 
 export default function ScoreLeaderboardData({
   score,
@@ -60,7 +80,7 @@ export default function ScoreLeaderboardData({
                 className="smooth-transition cursor-pointer font-bold hover:text-primary"
                 href={`/user/${score.user.user_id}`}
               >
-                {score.user.username}
+                <TopScoreUsername userId={score.user.user_id} username={score.user.username} />
               </Link>
             </UserHoverCard>
             <Tooltip content={toPrettyDate(score.when_played, true)}>
