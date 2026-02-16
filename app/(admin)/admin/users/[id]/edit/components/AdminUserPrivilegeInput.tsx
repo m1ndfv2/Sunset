@@ -11,26 +11,18 @@ import { useAdminEditPrivilege } from "@/lib/hooks/api/user/useAdminUserEdit";
 import type { UserSensitiveResponse } from "@/lib/types/api";
 import { UserPrivilege } from "@/lib/types/api";
 
-const MODERATOR_PRIVILEGE = "Moderator" as const;
+type ElevatedPrivilege = Exclude<UserPrivilege, UserPrivilege.USER>;
 
-type ElevatedPrivilege = Exclude<UserPrivilege, UserPrivilege.USER> | typeof MODERATOR_PRIVILEGE;
-
-function toElevatedPrivilege(value: UserPrivilege): value is ElevatedPrivilege {
+function isElevatedPrivilege(value: UserPrivilege): value is ElevatedPrivilege {
   return value !== UserPrivilege.USER;
 }
 
 export const PRIVILEGE_OPTIONS = Object.values(UserPrivilege)
-  .filter(toElevatedPrivilege)
-  .map((value) => {
-    return {
-      label: value.replaceAll(/([a-z])([A-Z])/g, "$1 $2"),
-      value,
-    };
-  })
-  .concat({
-    label: MODERATOR_PRIVILEGE,
-    value: MODERATOR_PRIVILEGE,
-  });
+  .filter(isElevatedPrivilege)
+  .map(value => ({
+    label: value.replaceAll(/([a-z])([A-Z])/g, "$1 $2"),
+    value,
+  }));
 
 function normalizePrivilege(privilege: string): UserPrivilege | null {
   const normalizedPrivilege = privilege.trim().toLowerCase();
@@ -41,14 +33,8 @@ function normalizePrivilege(privilege: string): UserPrivilege | null {
 }
 
 function normalizeElevatedPrivileges(privileges: string[]): ElevatedPrivilege[] {
-  const normalizedPrivileges = privileges.map((privilege) => {
-    if (privilege.trim().toLowerCase() === MODERATOR_PRIVILEGE.toLowerCase())
-      return MODERATOR_PRIVILEGE;
-
-    return normalizePrivilege(privilege);
-  });
-
-  return Array.from(new Set(normalizedPrivileges
+  return Array.from(new Set(privileges
+    .map(normalizePrivilege)
     .filter((value): value is ElevatedPrivilege => value != null && value !== UserPrivilege.USER)));
 }
 
@@ -78,13 +64,13 @@ export default function AdminUserPrivilegeInput({
   const handleSave = async () => {
     setError(null);
 
-    const privileges = [
+    const privileges: UserPrivilege[] = [
       UserPrivilege.USER,
       ...selectedPrivileges,
     ];
 
     try {
-      await editPrivilege({ privilege: Array.from(new Set(privileges)) as UserPrivilege[] });
+      await editPrivilege({ privilege: Array.from(new Set(privileges)) });
 
       toast({
         title: "Privileges updated successfully!",
