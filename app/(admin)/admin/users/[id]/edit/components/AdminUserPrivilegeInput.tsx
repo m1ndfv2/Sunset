@@ -11,7 +11,9 @@ import { useAdminEditPrivilege } from "@/lib/hooks/api/user/useAdminUserEdit";
 import type { UserSensitiveResponse } from "@/lib/types/api";
 import { UserPrivilege } from "@/lib/types/api";
 
-type ElevatedPrivilege = Exclude<UserPrivilege, UserPrivilege.USER>;
+const MODERATOR_PRIVILEGE = "Moderator" as const;
+
+type ElevatedPrivilege = Exclude<UserPrivilege, UserPrivilege.USER> | typeof MODERATOR_PRIVILEGE;
 
 function toElevatedPrivilege(value: UserPrivilege): value is ElevatedPrivilege {
   return value !== UserPrivilege.USER;
@@ -20,24 +22,18 @@ function toElevatedPrivilege(value: UserPrivilege): value is ElevatedPrivilege {
 export const PRIVILEGE_OPTIONS = Object.values(UserPrivilege)
   .filter(toElevatedPrivilege)
   .map((value) => {
-    if (value === UserPrivilege.BAT) {
-      return {
-        label: "Moderator",
-        value,
-      };
-    }
-
     return {
       label: value.replaceAll(/([a-z])([A-Z])/g, "$1 $2"),
       value,
     };
+  })
+  .concat({
+    label: MODERATOR_PRIVILEGE,
+    value: MODERATOR_PRIVILEGE,
   });
 
 function normalizePrivilege(privilege: string): UserPrivilege | null {
   const normalizedPrivilege = privilege.trim().toLowerCase();
-
-  if (normalizedPrivilege === "moderator")
-    return UserPrivilege.BAT;
 
   return Object.values(UserPrivilege).find(
     value => value.toLowerCase() === normalizedPrivilege,
@@ -45,8 +41,14 @@ function normalizePrivilege(privilege: string): UserPrivilege | null {
 }
 
 function normalizeElevatedPrivileges(privileges: string[]): ElevatedPrivilege[] {
-  return Array.from(new Set(privileges
-    .map(normalizePrivilege)
+  const normalizedPrivileges = privileges.map((privilege) => {
+    if (privilege.trim().toLowerCase() === MODERATOR_PRIVILEGE.toLowerCase())
+      return MODERATOR_PRIVILEGE;
+
+    return normalizePrivilege(privilege);
+  });
+
+  return Array.from(new Set(normalizedPrivileges
     .filter((value): value is ElevatedPrivilege => value != null && value !== UserPrivilege.USER)));
 }
 
@@ -76,13 +78,13 @@ export default function AdminUserPrivilegeInput({
   const handleSave = async () => {
     setError(null);
 
-    const privileges: UserPrivilege[] = [
+    const privileges = [
       UserPrivilege.USER,
       ...selectedPrivileges,
     ];
 
     try {
-      await editPrivilege({ privilege: Array.from(new Set(privileges)) });
+      await editPrivilege({ privilege: Array.from(new Set(privileges)) as UserPrivilege[] });
 
       toast({
         title: "Privileges updated successfully!",
