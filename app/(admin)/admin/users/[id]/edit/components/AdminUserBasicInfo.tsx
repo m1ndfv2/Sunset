@@ -9,16 +9,21 @@ import AdminUserRestrictButton from "@/app/(admin)/admin/users/[id]/edit/compone
 import AdminUserUsernameInput from "@/app/(admin)/admin/users/[id]/edit/components/AdminUserUsernameInput";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserPreviousUsernames } from "@/lib/hooks/api/user/useUserPreviousUsernames";
+import useSelf from "@/lib/hooks/useSelf";
 import type { UserSensitiveResponse } from "@/lib/types/api";
+import { isUserHasAdminPrivilege } from "@/lib/utils/userPrivileges.util";
 
 export default function AdminUserBasicInfo({
   user,
 }: {
   user: UserSensitiveResponse;
 }) {
+  const { self } = useSelf();
   const { data: previousUsernames } = useUserPreviousUsernames(user.user_id);
+  const canEditAll = self ? isUserHasAdminPrivilege(self) : false;
 
   return (
     <Card>
@@ -34,7 +39,9 @@ export default function AdminUserBasicInfo({
             <User className="size-4" />
             Username
           </Label>
-          <AdminUserUsernameInput user={user} />
+          {canEditAll
+            ? <AdminUserUsernameInput user={user} />
+            : <Input id="username" value={user.username} disabled />}
         </div>
 
         <div className="space-y-2">
@@ -45,7 +52,19 @@ export default function AdminUserBasicInfo({
           <AdminUserEmailInput user={user} />
         </div>
 
-        <AdminUserPrivilegeInput user={user} />
+        {canEditAll
+          ? (
+              <AdminUserPrivilegeInput user={user} />
+            )
+          : (
+              <div className="space-y-2">
+                <Label>Privileges</Label>
+                <Input
+                  value={user.privilege.join(", ") || "User"}
+                  disabled
+                />
+              </div>
+            )}
 
         <div className="border-t border-border" />
 
@@ -64,7 +83,7 @@ export default function AdminUserBasicInfo({
         )}
 
         <AdminUserRestrictButton user={user} />
-        <AdminUserResetPassword user={user} />
+        {canEditAll && <AdminUserResetPassword user={user} />}
       </CardContent>
     </Card>
   );
