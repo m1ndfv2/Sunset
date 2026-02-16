@@ -43,7 +43,7 @@ import {
   ScoreTableType,
 } from "@/lib/types/api";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
-import { isUserHasAdminPrivilege } from "@/lib/utils/userPrivileges.util";
+import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
 import UserTabBeatmaps from "./components/Tabs/UserTabBeatmaps";
 import UserTabMedals from "./components/Tabs/UserTabMedals";
@@ -303,7 +303,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                         {/* TODO: <Button onClick={() => {}} icon={<MessageSquare />} /> */}
                       </>
                     )}
-                    {self && isUserHasAdminPrivilege(self) && (
+                    {self && isUserCanUseAdminUserSearch(self) && (
                       <Button
                         variant="outline"
                         className="w-9 border-0"

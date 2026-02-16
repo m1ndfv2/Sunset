@@ -16,13 +16,15 @@ import { useT } from "@/lib/i18n/utils";
 import { UserBadge } from "@/lib/types/api";
 
 interface UserPrivilegeBadgesProps {
-  badges: UserBadge[];
+  badges: string[];
   small?: boolean;
   className?: string;
   withToolTip?: boolean;
 }
 
-const badgeMap = {
+type BadgeIconElement = React.ReactElement<{ className?: string }>;
+
+const badgeMap: Record<string, { icon: BadgeIconElement; color: string }> = {
   [UserBadge.DEVELOPER]: {
     icon: <Coffee className="size-4 md:size-6" />,
     color:
@@ -42,6 +44,11 @@ const badgeMap = {
     icon: <Shield className="size-4 md:size-6" />,
     color: "bg-red-600/30 hover:bg-red-500/30 text-red-400 border-red-600",
   },
+  Moderator: {
+    icon: <Shield className="size-4 md:size-6" />,
+    color:
+      "bg-emerald-600/30 hover:bg-emerald-500/30 text-emerald-400 border-emerald-600",
+  },
   [UserBadge.SUPPORTER]: {
     icon: <HeartHandshake className="size-4 md:size-6" />,
     color: "bg-pink-600/30 hover:bg-pink-500/30 text-pink-400 border-pink-600",
@@ -56,10 +63,11 @@ export default function UserPrivilegeBadges({
 }: UserPrivilegeBadgesProps) {
   const t = useT("pages.user.components.privilegeBadges");
 
-  const badgeNames = useMemo(
+  const badgeNames = useMemo<Record<string, string>>(
     () => ({
       [UserBadge.DEVELOPER]: t("badges.Developer"),
       [UserBadge.ADMIN]: t("badges.Admin"),
+      Moderator: t("badges.Moderator"),
       [UserBadge.BAT]: t("badges.Bat"),
       [UserBadge.BOT]: t("badges.Bot"),
       [UserBadge.SUPPORTER]: t("badges.Supporter"),
