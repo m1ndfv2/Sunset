@@ -50,12 +50,40 @@ async function fileToDataUrl(file: File): Promise<string> {
 }
 
 async function requestWithMethod<T>(
-  method: "post" | "delete",
+  method: "post" | "delete" | "patch",
   url: string,
   options?: Parameters<typeof poster>[1],
 ): Promise<T> {
   if (method === "post") {
     return await poster<T>(url, options);
+  }
+
+  if (method === "patch") {
+    const token = await getUserToken();
+    const result = await kyInstance
+      .patch(url, {
+        ...options,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      })
+      .then(async (res) => {
+        const contentType = res?.headers?.get("content-type");
+
+        if (!(contentType != null
+          && contentType.includes("application/json"))) {
+          return null;
+        }
+
+        try {
+          return await res.json();
+        }
+        catch {
+          return null;
+        }
+      });
+
+    return result as T;
   }
 
   const token = await getUserToken();
@@ -87,7 +115,7 @@ async function requestWithMethod<T>(
 
 async function tryRequests<T>(
   attempts: Array<{
-    method?: "post" | "delete";
+    method?: "post" | "delete" | "patch";
     url: string;
     options?: Parameters<typeof poster>[1];
   }>,
@@ -206,6 +234,8 @@ export default function ClanDetailsPage() {
       };
 
       const updated = await tryRequests<ClanDetailsResponse>([
+        { method: "patch", url: "clan/avatar", options: { json: payload } },
+        { url: "clan/avatar", options: { json: payload } },
         { url: `clan/${clanId}/edit`, options: { json: payload } },
         { url: `clan/${clanId}/update`, options: { json: payload } },
         { url: `clan/${clanId}`, options: { json: payload } },
