@@ -17,36 +17,57 @@ import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getUserToken } from "@/lib/actions/getUserToken";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
+import { editClanTag } from "@/lib/hooks/api/clan/useEditClanTag";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
 
+const CLAN_AVATAR_DATA_URL_MAX_LENGTH = 2048;
+const CLAN_AVATAR_TOO_LARGE_ERROR = "CLAN_AVATAR_TOO_LARGE_ERROR";
+
 async function fileToDataUrl(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement("canvas");
-  const maxSide = 128;
-  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
-
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
   const ctx = canvas.getContext("2d");
-  if (!ctx)
+
+  if (!ctx) {
+    bitmap.close();
     throw new Error("Failed to process image");
+  }
 
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const maxSides = [128, 96, 80, 64, 48, 40, 32];
+  const qualities = [0.82, 0.72, 0.62, 0.52, 0.42];
 
-  const dataUrl = canvas.toDataURL("image/webp", 0.8);
-  bitmap.close();
+  try {
+    for (const maxSide of maxSides) {
+      const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
 
-  return dataUrl;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      for (const quality of qualities) {
+        const dataUrl = canvas.toDataURL("image/webp", quality);
+        if (dataUrl.length <= CLAN_AVATAR_DATA_URL_MAX_LENGTH)
+          return dataUrl;
+      }
+    }
+  }
+  finally {
+    bitmap.close();
+  }
+
+  throw new Error(CLAN_AVATAR_TOO_LARGE_ERROR);
 }
 
 export default function ClanDetailsPage() {
@@ -58,6 +79,7 @@ export default function ClanDetailsPage() {
   const { self } = useSelf();
 
   const t = useT("pages.clansDetails");
+  const clansFormT = useT("pages.clans.form");
 
   const mode = searchParams.get("mode") ?? GameMode.STANDARD;
   const [activeMode, setActiveMode] = useState(
@@ -66,9 +88,12 @@ export default function ClanDetailsPage() {
 
   const [isJoinLoading, setIsJoinLoading] = useState(false);
   const [isLeaveLoading, setIsLeaveLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [kickingUserId, setKickingUserId] = useState<number | null>(null);
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [clanTag, setClanTag] = useState("");
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -85,7 +110,8 @@ export default function ClanDetailsPage() {
 
   useEffect(() => {
     setDescription(clan?.description ?? "");
-  }, [clan?.description]);
+    setClanTag(clan?.tag ?? "");
+  }, [clan?.description, clan?.tag]);
 
   const createInviteLink = async () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -147,7 +173,19 @@ export default function ClanDetailsPage() {
       const requests: Array<Promise<ClanDetailsResponse>> = [];
 
       const trimmedDescription = description.trim();
+      const normalizedTag = clanTag.trim().toUpperCase();
+      const currentTag = (clan?.tag ?? "").trim().toUpperCase();
       const isDescriptionChanged = (clan?.description ?? "") !== trimmedDescription;
+      const isTagChanged = currentTag !== normalizedTag;
+
+      if (normalizedTag.length > 0 && !/^[A-Z0-9]{3}$/.test(normalizedTag)) {
+        toast({
+          title: t("manage.tagInvalid"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (isDescriptionChanged) {
         console.info("[clan] description changed", {
           clanId,
@@ -155,6 +193,15 @@ export default function ClanDetailsPage() {
           nextLength: trimmedDescription.length,
         });
         requests.push(editClanDescription({ description: trimmedDescription || undefined }));
+      }
+
+      if (isTagChanged) {
+        console.info("[clan] tag changed", {
+          clanId,
+          previousTag: currentTag || null,
+          nextTag: normalizedTag || null,
+        });
+        requests.push(editClanTag({ tag: normalizedTag || undefined }));
       }
 
       if (avatarFile) {
@@ -176,6 +223,7 @@ export default function ClanDetailsPage() {
         clanId,
         requestsCount: requests.length,
         isDescriptionChanged,
+        isTagChanged,
         hasAvatarUpdate: Boolean(avatarFile),
       });
 
@@ -209,6 +257,15 @@ export default function ClanDetailsPage() {
         clanId,
         error,
       });
+
+      if (error instanceof Error && error.message === CLAN_AVATAR_TOO_LARGE_ERROR) {
+        toast({
+          title: clansFormT("avatarTooLarge"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: error instanceof Error ? error.message : t("manage.updateFailed"),
         variant: "destructive",
@@ -219,7 +276,7 @@ export default function ClanDetailsPage() {
     }
   };
 
-  const kickMember = async (_userId: number) => {
+  const kickMember = async (userId: number) => {
     if (!isCreator || !isMember) {
       toast({
         title: t("manage.onlyCreatorCanKick"),
@@ -228,10 +285,65 @@ export default function ClanDetailsPage() {
       return;
     }
 
-    toast({
-      title: t("manage.kickFailed"),
-      variant: "destructive",
-    });
+    setKickingUserId(userId);
+
+    try {
+      const nextClanDetails = await poster<ClanDetailsResponse>(`clan/kick/${userId}`, {});
+
+      toast({
+        title: t("manage.kicked"),
+        variant: "success",
+      });
+
+      await clanQuery.mutate(nextClanDetails, { revalidate: false });
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.kickFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setKickingUserId(null);
+    }
+  };
+
+  const deleteClan = async () => {
+    if (!isCreator || !isMember) {
+      toast({
+        title: t("manage.onlyCreatorCanKick"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsDeleteLoading(true);
+
+    try {
+      const token = await getUserToken();
+
+      await kyInstance.delete("clan", {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      toast({
+        title: "Clan deleted",
+        variant: "success",
+      });
+
+      router.push("/clans");
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsDeleteLoading(false);
+    }
   };
 
   const acceptInvite = async () => {
@@ -299,6 +411,9 @@ export default function ClanDetailsPage() {
 
                         <div>
                           <p className="text-xl font-semibold">{clan.name}</p>
+                          {clan.tag && (
+                            <p className="text-sm text-muted-foreground">[{clan.tag}]</p>
+                          )}
                           {clan.description && (
                             <p className="text-sm text-muted-foreground">{clan.description}</p>
                           )}
@@ -321,6 +436,20 @@ export default function ClanDetailsPage() {
 
                           <div className="space-y-2 pt-2">
                             <p className="text-sm text-muted-foreground">{t("manage.header")}</p>
+                            <label className="text-xs text-muted-foreground">{t("manage.tagLabel")}</label>
+                            <input
+                              className="w-full rounded-lg bg-card p-2 text-sm uppercase text-current"
+                              value={clanTag}
+                              onChange={(e) => {
+                                const nextTag = e.target.value
+                                  .toUpperCase()
+                                  .replaceAll(/[^A-Z0-9]/g, "")
+                                  .slice(0, 3);
+                                setClanTag(nextTag);
+                              }}
+                              placeholder={t("manage.tagPlaceholder")}
+                              maxLength={3}
+                            />
                             <label className="text-xs text-muted-foreground">{t("manage.descriptionLabel")}</label>
                             <textarea
                               className="h-24 max-h-64 w-full rounded-lg bg-card p-2 text-sm text-current"
@@ -357,12 +486,21 @@ export default function ClanDetailsPage() {
                         </div>
                       )}
 
-                      {isMember && (
+                      {isMember && !isCreator && (
                         <div className="rounded-xl border p-3">
                           <p className="mb-2 text-sm text-muted-foreground">{t("leave.hint")}</p>
                           <Button onClick={leaveClan} isLoading={isLeaveLoading} variant="destructive">
                             <LogOut size={16} />
                             {t("leave.action")}
+                          </Button>
+                        </div>
+                      )}
+
+                      {isCreator && (
+                        <div className="rounded-xl border p-3">
+                          <p className="mb-2 text-sm text-muted-foreground">Delete clan permanently. This action cannot be undone.</p>
+                          <Button onClick={deleteClan} isLoading={isDeleteLoading} variant="destructive">
+                            Delete clan
                           </Button>
                         </div>
                       )}
@@ -403,7 +541,8 @@ export default function ClanDetailsPage() {
                                   size="sm"
                                   variant="destructive"
                                   onClick={() => kickMember(member.user.user_id)}
-                                  disabled={!isCreator || !isMember}
+                                  isLoading={kickingUserId === member.user.user_id}
+                                  disabled={!isCreator || !isMember || kickingUserId != null}
                                 >
                                   {t("manage.kick")}
                                 </Button>
