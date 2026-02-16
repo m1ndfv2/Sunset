@@ -22,7 +22,7 @@ interface UserPrivilegeBadgesProps {
   withToolTip?: boolean;
 }
 
-const badgeMap = {
+const badgeMap: Record<string, { icon: React.ReactElement; color: string }> = {
   [UserBadge.DEVELOPER]: {
     icon: <Coffee className="size-4 md:size-6" />,
     color:
