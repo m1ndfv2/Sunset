@@ -1,21 +1,21 @@
 {
   "general": {
     "appName": {
-      "text": "osu!sunrise",
+      "text": "osum1nd",
       "context": "The name of the application, will be inclided in various places such as the title meta tag"
     },
     "serverTitle": {
       "full": {
-        "text": "sunrise",
+        "text": "osum1nd",
         "context": "The full name of the server"
       },
       "split": {
         "part1": {
-          "text": "sun",
+          "text": "osu",
           "context": "The first part of the split server name"
         },
         "part2": {
-          "text": "rise",
+          "text": "m1nd",
           "context": "The second part of the split server name"
         }
       }
