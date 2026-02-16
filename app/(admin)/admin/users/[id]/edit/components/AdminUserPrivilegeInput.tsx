@@ -13,10 +13,36 @@ import { UserPrivilege } from "@/lib/types/api";
 
 export const PRIVILEGE_OPTIONS = Object.values(UserPrivilege)
   .filter(value => value !== UserPrivilege.USER)
-  .map(value => ({
-    label: value.replaceAll(/([a-z])([A-Z])/g, "$1 $2"),
-    value,
-  }));
+  .map((value) => {
+    if (value === UserPrivilege.BAT) {
+      return {
+        label: "Moderator",
+        value,
+      };
+    }
+
+    return {
+      label: value.replaceAll(/([a-z])([A-Z])/g, "$1 $2"),
+      value,
+    };
+  });
+
+function normalizePrivilege(privilege: string): UserPrivilege | null {
+  const normalizedPrivilege = privilege.trim().toLowerCase();
+
+  if (normalizedPrivilege === "moderator")
+    return UserPrivilege.BAT;
+
+  return Object.values(UserPrivilege).find(
+    value => value.toLowerCase() === normalizedPrivilege,
+  ) ?? null;
+}
+
+function normalizePrivileges(privileges: string[]): UserPrivilege[] {
+  return Array.from(new Set(privileges
+    .map(normalizePrivilege)
+    .filter((value): value is UserPrivilege => value != null)));
+}
 
 export default function AdminUserPrivilegeInput({
   user,
@@ -24,7 +50,7 @@ export default function AdminUserPrivilegeInput({
   user: UserSensitiveResponse;
 }) {
   const [selectedPrivileges, setSelectedPrivileges] = useState<UserPrivilege[]>(
-    user.privilege,
+    normalizePrivileges(user.privilege).filter(p => p !== UserPrivilege.USER),
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -33,16 +59,21 @@ export default function AdminUserPrivilegeInput({
   const { toast } = useToast();
 
   useEffect(() => {
-    setSelectedPrivileges(user.privilege);
+    setSelectedPrivileges(
+      normalizePrivileges(user.privilege).filter(p => p !== UserPrivilege.USER),
+    );
   }, [user.privilege]);
 
   const handleSave = async () => {
     setError(null);
 
-    const privileges = selectedPrivileges as UserPrivilege[];
+    const privileges = [
+      UserPrivilege.USER,
+      ...selectedPrivileges,
+    ] as UserPrivilege[];
 
     try {
-      await editPrivilege({ privilege: privileges });
+      await editPrivilege({ privilege: Array.from(new Set(privileges)) });
 
       toast({
         title: "Privileges updated successfully!",
@@ -61,7 +92,8 @@ export default function AdminUserPrivilegeInput({
     }
   };
 
-  const currentPrivileges = user.privilege;
+  const currentPrivileges = normalizePrivileges(user.privilege)
+    .filter(p => p !== UserPrivilege.USER);
 
   const hasChanges
     = selectedPrivileges.length !== currentPrivileges.length
@@ -78,9 +110,7 @@ export default function AdminUserPrivilegeInput({
           options={PRIVILEGE_OPTIONS}
           onValueChange={(values: string[]) =>
             setSelectedPrivileges(values as UserPrivilege[])}
-          defaultValue={Object.values(user.privilege).filter(
-            v => v !== UserPrivilege.USER,
-          )}
+          defaultValue={currentPrivileges}
           placeholder="Select privileges..."
           className="flex-1"
         />
