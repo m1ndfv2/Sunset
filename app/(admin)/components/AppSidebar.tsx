@@ -76,8 +76,7 @@ export function AppSidebar() {
       return isUserCanUseAdminUserSearch(self);
     }
 
-    const requirements = item.requires && !self.badges.includes(item.requires);
-    return !requirements;
+    return true;
   });
 
   const actionTabsWithAccess = actionTabs.filter((item) => {
