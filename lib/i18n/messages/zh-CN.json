@@ -943,6 +943,17 @@
       "errors": {
         "notFound": "未找到该战队。"
       },
+      "invite": {
+        "creatorHint": "使用可分享链接邀请玩家加入你的战队。",
+        "copyInviteLink": "复制邀请链接",
+        "linkCopied": "邀请链接已复制",
+        "prompt": "你被邀请加入该战队，是否加入？",
+        "accept": "加入战队",
+        "decline": "拒绝",
+        "joined": "你已加入战队",
+        "joinUnavailable": "无法加入战队",
+        "joinUnavailableHint": "服务器暂不支持邀请接受 endpoint。"
+      },
       "leave": {
         "hint": "你可以随时退出该战队。",
         "action": "退出战队",
