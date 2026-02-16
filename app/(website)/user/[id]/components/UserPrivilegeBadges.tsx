@@ -63,7 +63,7 @@ export default function UserPrivilegeBadges({
 }: UserPrivilegeBadgesProps) {
   const t = useT("pages.user.components.privilegeBadges");
 
-  const badgeNames = useMemo(
+  const badgeNames = useMemo<Record<string, string>>(
     () => ({
       [UserBadge.DEVELOPER]: t("badges.Developer"),
       [UserBadge.ADMIN]: t("badges.Admin"),
