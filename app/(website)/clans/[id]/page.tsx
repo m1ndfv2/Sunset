@@ -17,6 +17,7 @@ import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getUserToken } from "@/lib/actions/getUserToken";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
@@ -24,6 +25,7 @@ import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription
 import { editClanTag } from "@/lib/hooks/api/clan/useEditClanTag";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
@@ -86,6 +88,8 @@ export default function ClanDetailsPage() {
 
   const [isJoinLoading, setIsJoinLoading] = useState(false);
   const [isLeaveLoading, setIsLeaveLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [kickingUserId, setKickingUserId] = useState<number | null>(null);
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
@@ -272,7 +276,7 @@ export default function ClanDetailsPage() {
     }
   };
 
-  const kickMember = async (_userId: number) => {
+  const kickMember = async (userId: number) => {
     if (!isCreator || !isMember) {
       toast({
         title: t("manage.onlyCreatorCanKick"),
@@ -281,10 +285,65 @@ export default function ClanDetailsPage() {
       return;
     }
 
-    toast({
-      title: t("manage.kickFailed"),
-      variant: "destructive",
-    });
+    setKickingUserId(userId);
+
+    try {
+      const nextClanDetails = await poster<ClanDetailsResponse>(`clan/kick/${userId}`, {});
+
+      toast({
+        title: t("manage.kicked"),
+        variant: "success",
+      });
+
+      await clanQuery.mutate(nextClanDetails, { revalidate: false });
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.kickFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setKickingUserId(null);
+    }
+  };
+
+  const deleteClan = async () => {
+    if (!isCreator || !isMember) {
+      toast({
+        title: t("manage.onlyCreatorCanKick"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsDeleteLoading(true);
+
+    try {
+      const token = await getUserToken();
+
+      await kyInstance.delete("clan", {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      toast({
+        title: "Clan deleted",
+        variant: "success",
+      });
+
+      router.push("/clans");
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsDeleteLoading(false);
+    }
   };
 
   const acceptInvite = async () => {
@@ -427,12 +486,21 @@ export default function ClanDetailsPage() {
                         </div>
                       )}
 
-                      {isMember && (
+                      {isMember && !isCreator && (
                         <div className="rounded-xl border p-3">
                           <p className="mb-2 text-sm text-muted-foreground">{t("leave.hint")}</p>
                           <Button onClick={leaveClan} isLoading={isLeaveLoading} variant="destructive">
                             <LogOut size={16} />
                             {t("leave.action")}
+                          </Button>
+                        </div>
+                      )}
+
+                      {isCreator && (
+                        <div className="rounded-xl border p-3">
+                          <p className="mb-2 text-sm text-muted-foreground">Delete clan permanently. This action cannot be undone.</p>
+                          <Button onClick={deleteClan} isLoading={isDeleteLoading} variant="destructive">
+                            Delete clan
                           </Button>
                         </div>
                       )}
@@ -473,7 +541,8 @@ export default function ClanDetailsPage() {
                                   size="sm"
                                   variant="destructive"
                                   onClick={() => kickMember(member.user.user_id)}
-                                  disabled={!isCreator || !isMember}
+                                  isLoading={kickingUserId === member.user.user_id}
+                                  disabled={!isCreator || !isMember || kickingUserId != null}
                                 >
                                   {t("manage.kick")}
                                 </Button>
