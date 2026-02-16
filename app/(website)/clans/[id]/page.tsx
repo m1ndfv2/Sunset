@@ -21,6 +21,7 @@ import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
+import { editClanTag } from "@/lib/hooks/api/clan/useEditClanTag";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import poster from "@/lib/services/poster";
@@ -88,6 +89,7 @@ export default function ClanDetailsPage() {
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [clanTag, setClanTag] = useState("");
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -104,7 +106,8 @@ export default function ClanDetailsPage() {
 
   useEffect(() => {
     setDescription(clan?.description ?? "");
-  }, [clan?.description]);
+    setClanTag(clan?.tag ?? "");
+  }, [clan?.description, clan?.tag]);
 
   const createInviteLink = async () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -166,7 +169,19 @@ export default function ClanDetailsPage() {
       const requests: Array<Promise<ClanDetailsResponse>> = [];
 
       const trimmedDescription = description.trim();
+      const normalizedTag = clanTag.trim().toUpperCase();
+      const currentTag = (clan?.tag ?? "").trim().toUpperCase();
       const isDescriptionChanged = (clan?.description ?? "") !== trimmedDescription;
+      const isTagChanged = currentTag !== normalizedTag;
+
+      if (normalizedTag.length > 0 && !/^[A-Z0-9]{3}$/.test(normalizedTag)) {
+        toast({
+          title: t("manage.tagInvalid"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (isDescriptionChanged) {
         console.info("[clan] description changed", {
           clanId,
@@ -174,6 +189,15 @@ export default function ClanDetailsPage() {
           nextLength: trimmedDescription.length,
         });
         requests.push(editClanDescription({ description: trimmedDescription || undefined }));
+      }
+
+      if (isTagChanged) {
+        console.info("[clan] tag changed", {
+          clanId,
+          previousTag: currentTag || null,
+          nextTag: normalizedTag || null,
+        });
+        requests.push(editClanTag({ tag: normalizedTag || undefined }));
       }
 
       if (avatarFile) {
@@ -195,6 +219,7 @@ export default function ClanDetailsPage() {
         clanId,
         requestsCount: requests.length,
         isDescriptionChanged,
+        isTagChanged,
         hasAvatarUpdate: Boolean(avatarFile),
       });
 
@@ -327,6 +352,9 @@ export default function ClanDetailsPage() {
 
                         <div>
                           <p className="text-xl font-semibold">{clan.name}</p>
+                          {clan.tag && (
+                            <p className="text-sm text-muted-foreground">[{clan.tag}]</p>
+                          )}
                           {clan.description && (
                             <p className="text-sm text-muted-foreground">{clan.description}</p>
                           )}
@@ -349,6 +377,20 @@ export default function ClanDetailsPage() {
 
                           <div className="space-y-2 pt-2">
                             <p className="text-sm text-muted-foreground">{t("manage.header")}</p>
+                            <label className="text-xs text-muted-foreground">{t("manage.tagLabel")}</label>
+                            <input
+                              className="w-full rounded-lg bg-card p-2 text-sm uppercase text-current"
+                              value={clanTag}
+                              onChange={(e) => {
+                                const nextTag = e.target.value
+                                  .toUpperCase()
+                                  .replaceAll(/[^A-Z0-9]/g, "")
+                                  .slice(0, 3);
+                                setClanTag(nextTag);
+                              }}
+                              placeholder={t("manage.tagPlaceholder")}
+                              maxLength={3}
+                            />
                             <label className="text-xs text-muted-foreground">{t("manage.descriptionLabel")}</label>
                             <textarea
                               className="h-24 max-h-64 w-full rounded-lg bg-card p-2 text-sm text-current"
