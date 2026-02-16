@@ -120,7 +120,7 @@ export default function Wiki() {
                 {t.rich("contributeSuggest.instructions", {
                   a: chunks => (
                     <Link
-                      href="https://github.com/SunriseCommunity"
+                      href="https://github.com/osum1ndCommunity"
                       className="text-primary underline transition-opacity hover:opacity-80"
                     >
                       {chunks}
