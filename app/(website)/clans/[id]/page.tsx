@@ -8,7 +8,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import GameModeSelector from "@/components/GameModeSelector";
 import ImageSelect from "@/components/General/ImageSelect";
@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
+import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import poster from "@/lib/services/poster";
@@ -67,6 +68,7 @@ export default function ClanDetailsPage() {
   const [isLeaveLoading, setIsLeaveLoading] = useState(false);
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -80,6 +82,10 @@ export default function ClanDetailsPage() {
 
   const isCreator = selfMembership?.role === "creator";
   const isMember = Boolean(selfMembership);
+
+  useEffect(() => {
+    setDescription(clan?.description ?? "");
+  }, [clan?.description]);
 
   const createInviteLink = async () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -133,20 +139,37 @@ export default function ClanDetailsPage() {
 
     setIsSavingClan(true);
     try {
-      const encodedAvatar = avatarFile ? await fileToDataUrl(avatarFile) : undefined;
+      const requests: Array<Promise<ClanDetailsResponse>> = [];
 
-      const payload = {
-        avatar_url: encodedAvatar,
-      };
+      const trimmedDescription = description.trim();
+      if ((clan?.description ?? "") !== trimmedDescription) {
+        requests.push(editClanDescription({ description: trimmedDescription || undefined }));
+      }
 
-      const updated = await editClanAvatar(payload);
+      if (avatarFile) {
+        const encodedAvatar = await fileToDataUrl(avatarFile);
+        requests.push(editClanAvatar({ avatar_url: encodedAvatar }));
+      }
 
-      if (updated?.clan) {
-        await clanQuery.mutate(updated, { revalidate: false });
+      if (requests.length === 0) {
+        toast({
+          title: t("manage.saved"),
+          variant: "success",
+        });
+        return;
+      }
+
+      const updates = await Promise.all(requests);
+      const latestUpdate = updates.at(-1);
+
+      if (latestUpdate?.clan) {
+        await clanQuery.mutate(latestUpdate, { revalidate: false });
       }
       else {
         await clanQuery.mutate();
       }
+
+      setAvatarFile(null);
 
       toast({
         title: t("manage.saved"),
@@ -244,6 +267,9 @@ export default function ClanDetailsPage() {
 
                         <div>
                           <p className="text-xl font-semibold">{clan.name}</p>
+                          {clan.description && (
+                            <p className="text-sm text-muted-foreground">{clan.description}</p>
+                          )}
                           <p className="text-sm text-muted-foreground">
                             {t("labels.totalPp")}: {numberWith(Math.round(clan.total_pp))}
                           </p>
@@ -263,6 +289,14 @@ export default function ClanDetailsPage() {
 
                           <div className="space-y-2 pt-2">
                             <p className="text-sm text-muted-foreground">{t("manage.header")}</p>
+                            <label className="text-xs text-muted-foreground">{t("manage.descriptionLabel")}</label>
+                            <textarea
+                              className="h-24 max-h-64 w-full rounded-lg bg-card p-2 text-sm text-current"
+                              value={description}
+                              onChange={e => setDescription(e.target.value)}
+                              placeholder={t("manage.descriptionPlaceholder")}
+                              maxLength={256}
+                            />
                             <label className="text-xs text-muted-foreground">{t("manage.avatarLabel")}</label>
                             <ImageSelect
                               setFile={setAvatarFile}

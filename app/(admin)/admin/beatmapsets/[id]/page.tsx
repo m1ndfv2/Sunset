@@ -116,7 +116,7 @@ export default function AdminBeatmapset(props: BeatmapsetProps) {
                       <Button variant="secondary" size="xl" asChild>
                         <Link href={`/beatmapsets/${beatmapSet.id}`}>
                           <ExternalLink />
-                          Open on Sunrise
+                          Open on osum1nd
                         </Link>
                       </Button>
 
