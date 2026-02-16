@@ -1,6 +1,6 @@
 {
-  "name": "Sunrise - A feature-rich private osu! server",
-  "short_name": "Sunrise",
+  "name": "osum1nd - A feature-rich private osu! server",
+  "short_name": "osum1nd",
   "description": "A feature-rich private osu! server with Relax, Autopilot, ScoreV2 support, and a custom PP system tailored for Relax and Autopilot gameplay.",
   "icons": [
     {

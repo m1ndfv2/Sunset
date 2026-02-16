@@ -2318,9 +2318,9 @@
               "text": "Admin",
               "context": "Name of the Admin badge"
             },
-             "Moderator": {
-            "text": "Moderator",
-            "context": "Name of the Moderator badge"
+            "Moderator": {
+              "text": "Moderator",
+              "context": "Name of the Moderator badge"
             },
             "Bat": {
               "text": "BAT",
