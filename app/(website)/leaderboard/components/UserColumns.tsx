@@ -18,11 +18,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserHoverCard from "@/components/UserHoverCard";
 import UserRankColor from "@/components/UserRankNumber";
+import { useUserClan } from "@/lib/hooks/api/user/useUserClan";
 import { useT } from "@/lib/i18n/utils";
-import type { UserResponse, UserStatsResponse } from "@/lib/types/api";
+import type { GameMode, UserResponse, UserStatsResponse } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 
-export function useUserColumns() {
+function LeaderboardUsername({
+  userId,
+  username,
+  mode,
+}: {
+  userId: number;
+  username: string;
+  mode: GameMode;
+}) {
+  const clanQuery = useUserClan(userId, mode);
+  const clanTag = clanQuery.data?.clan?.tag?.trim();
+
+  if (!clanTag)
+    return <>{username}</>;
+
+  if (username.startsWith(`[${clanTag}]`))
+    return <>{username}</>;
+
+  return <>{`[${clanTag}]${username}`}</>;
+}
+
+export function useUserColumns(mode: GameMode) {
   const t = useT("pages.leaderboard.table");
 
   return useMemo(
@@ -126,7 +148,7 @@ export function useUserColumns() {
                       variant="primary"
                       className="smooth-transition cursor-pointer text-lg font-bold "
                     >
-                      {username}
+                      <LeaderboardUsername userId={userId} username={username} mode={mode} />
                     </UserRankColor>
                   </Link>
                 </UserHoverCard>
@@ -257,6 +279,6 @@ export function useUserColumns() {
         user: UserResponse;
         stats: UserStatsResponse;
       }>>,
-    [t],
+    [mode, t],
   );
 }

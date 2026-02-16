@@ -964,6 +964,9 @@
         "header": "Керування кланом",
         "descriptionLabel": "Опис клану",
         "descriptionPlaceholder": "Введіть опис клану...",
+        "tagLabel": "Clan tag",
+        "tagPlaceholder": "ABC",
+        "tagInvalid": "Clan tag must be exactly 3 latin letters or digits.",
         "avatarLabel": "Аватар клану",
         "save": "Зберегти зміни",
         "saved": "Клан оновлено",
@@ -971,7 +974,14 @@
         "kick": "Вигнати",
         "kicked": "Учасника видалено з клану",
         "kickFailed": "Не вдалося видалити учасника",
-        "onlyCreatorCanKick": "Лише творець клану може виключати учасників"
+        "onlyCreatorCanKick": "Лише творець клану може виключати учасників",
+
+        "deleteHint": "Видалення клану є незворотним. Цю дію не можна скасувати.",
+        "delete": "Видалити клан",
+        "deleteConfirm": "Ви впевнені, що хочете видалити клан? Цю дію не можна скасувати.",
+        "deleted": "Клан видалено",
+        "deleteFailed": "Не вдалося видалити клан",
+        "onlyCreatorCanDelete": "Лише творець клану може видалити клан"
       }
     }
   }

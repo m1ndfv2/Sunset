@@ -821,6 +821,7 @@ export enum UserPrivilege {
   USER = "User",
   SUPPORTER = "Supporter",
   BAT = "Bat",
+  MODERATOR = "Moderator",
   ADMIN = "Admin",
   DEVELOPER = "Developer",
   SUPER_USER = "SuperUser",
