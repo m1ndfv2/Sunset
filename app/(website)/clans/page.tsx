@@ -23,25 +23,43 @@ import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
 
+const CLAN_AVATAR_DATA_URL_MAX_LENGTH = 2048;
+const CLAN_AVATAR_TOO_LARGE_ERROR = "CLAN_AVATAR_TOO_LARGE_ERROR";
+
 async function fileToDataUrl(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement("canvas");
-  const maxSide = 64;
-  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
-
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
   const ctx = canvas.getContext("2d");
-  if (!ctx)
+
+  if (!ctx) {
+    bitmap.close();
     throw new Error("Failed to process image");
+  }
 
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const maxSides = [128, 96, 80, 64, 48, 40, 32];
+  const qualities = [0.82, 0.72, 0.62, 0.52, 0.42];
 
-  const dataUrl = canvas.toDataURL("image/webp", 0.8);
-  bitmap.close();
+  try {
+    for (const maxSide of maxSides) {
+      const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
 
-  return dataUrl;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      for (const quality of qualities) {
+        const dataUrl = canvas.toDataURL("image/webp", quality);
+        if (dataUrl.length <= CLAN_AVATAR_DATA_URL_MAX_LENGTH)
+          return dataUrl;
+      }
+    }
+  }
+  finally {
+    bitmap.close();
+  }
+
+  throw new Error(CLAN_AVATAR_TOO_LARGE_ERROR);
 }
 
 export default function ClansPage() {
@@ -116,10 +134,6 @@ export default function ClansPage() {
     try {
       const encodedAvatar = avatarFile ? await fileToDataUrl(avatarFile) : undefined;
 
-      if (encodedAvatar && encodedAvatar.length > 2048) {
-        throw new Error(t("form.avatarTooLarge"));
-      }
-
       const payload: CreateClanRequest = {
         name: clanName.trim(),
         avatar_url: encodedAvatar,
@@ -132,6 +146,11 @@ export default function ClansPage() {
       window.location.href = `/clans/${created.clan.id}`;
     }
     catch (error) {
+      if (error instanceof Error && error.message === CLAN_AVATAR_TOO_LARGE_ERROR) {
+        setCreateError(t("form.avatarTooLarge"));
+        return;
+      }
+
       setCreateError(error instanceof Error ? error.message : t("form.createFailed"));
     }
     finally {
