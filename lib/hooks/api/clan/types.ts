@@ -4,6 +4,7 @@ export interface ClanResponse {
   id: number;
   name: string;
   avatar_url?: string | null;
+  description?: string | null;
   total_pp: number;
   created_at: string;
 }
@@ -33,4 +34,16 @@ export interface UseClansLeaderboardOptions {
   mode: GameMode;
   page?: number;
   limit?: number;
+}
+
+export interface EditClanAvatarRequest {
+  avatar_url?: string;
+}
+
+export interface EditClanNameRequest {
+  name: string;
+}
+
+export interface EditClanDescriptionRequest {
+  description?: string;
 }

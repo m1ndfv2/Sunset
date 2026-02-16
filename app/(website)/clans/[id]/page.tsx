@@ -17,12 +17,11 @@ import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { getUserToken } from "@/lib/actions/getUserToken";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
+import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
-import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
@@ -47,71 +46,6 @@ async function fileToDataUrl(file: File): Promise<string> {
   bitmap.close();
 
   return dataUrl;
-}
-
-async function requestWithMethod<T>(
-  method: "post" | "delete",
-  url: string,
-  options?: Parameters<typeof poster>[1],
-): Promise<T> {
-  if (method === "post") {
-    return await poster<T>(url, options);
-  }
-
-  const token = await getUserToken();
-  const result = await kyInstance
-    .delete(url, {
-      ...options,
-      headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    })
-    .then(async (res) => {
-      const contentType = res?.headers?.get("content-type");
-
-      if (!(contentType != null
-        && contentType.includes("application/json"))) {
-        return null;
-      }
-
-      try {
-        return await res.json();
-      }
-      catch {
-        return null;
-      }
-    });
-
-  return result as T;
-}
-
-async function tryRequests<T>(
-  attempts: Array<{
-    method?: "post" | "delete";
-    url: string;
-    options?: Parameters<typeof poster>[1];
-  }>,
-  debugLabel?: string,
-): Promise<T | null> {
-  let lastError: unknown;
-
-  for (const attempt of attempts) {
-    try {
-      return await requestWithMethod<T>(attempt.method ?? "post", attempt.url, attempt.options);
-    }
-    catch (error) {
-      lastError = error;
-
-      if (debugLabel) {
-        console.warn(
-          `[${debugLabel}] ${attempt.method ?? "post".toUpperCase()} ${attempt.url} failed`,
-          error,
-        );
-      }
-    }
-  }
-
-  throw lastError;
 }
 
 export default function ClanDetailsPage() {
@@ -205,11 +139,7 @@ export default function ClanDetailsPage() {
         avatar_url: encodedAvatar,
       };
 
-      const updated = await tryRequests<ClanDetailsResponse>([
-        { url: `clan/${clanId}/edit`, options: { json: payload } },
-        { url: `clan/${clanId}/update`, options: { json: payload } },
-        { url: `clan/${clanId}`, options: { json: payload } },
-      ]);
+      const updated = await editClanAvatar(payload);
 
       if (updated?.clan) {
         await clanQuery.mutate(updated, { revalidate: false });
