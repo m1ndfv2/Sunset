@@ -25,6 +25,7 @@ import { useBeatmapSetGetHypedSets } from "@/lib/hooks/api/beatmap/useBeatmapSet
 import useSelf from "@/lib/hooks/useSelf";
 import type { HypedBeatmapSetsResponse } from "@/lib/types/api";
 import { UserBadge } from "@/lib/types/api";
+import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
 const infoTabs = [
   {
@@ -36,7 +37,6 @@ const infoTabs = [
     title: "Users",
     url: "/admin/users/search",
     icon: Users,
-    requires: UserBadge.ADMIN,
   },
 ];
 
@@ -72,8 +72,11 @@ export function AppSidebar() {
     if (!self)
       return false;
 
-    const requirements = item.requires && !self.badges.includes(item.requires);
-    return !requirements;
+    if (item.url === "/admin/users/search") {
+      return isUserCanUseAdminUserSearch(self);
+    }
+
+    return true;
   });
 
   const actionTabsWithAccess = actionTabs.filter((item) => {

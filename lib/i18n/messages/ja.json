@@ -943,6 +943,17 @@
       "errors": {
         "notFound": "クランが見つかりません。"
       },
+      "invite": {
+        "creatorHint": "共有リンクを使ってプレイヤーをクランに招待できます。",
+        "copyInviteLink": "招待リンクをコピー",
+        "linkCopied": "招待リンクをコピーしました",
+        "prompt": "このクランに招待されています。参加しますか？",
+        "accept": "クランに参加",
+        "decline": "辞退",
+        "joined": "クランに参加しました",
+        "joinUnavailable": "クランに参加できませんでした",
+        "joinUnavailableHint": "サーバーはまだ招待承認エンドポイントに対応していません。"
+      },
       "leave": {
         "hint": "このクランはいつでも脱退できます。",
         "action": "クランを脱退",

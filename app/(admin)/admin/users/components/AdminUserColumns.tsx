@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import useSelf from "@/lib/hooks/useSelf";
 import type { UserSensitiveResponse } from "@/lib/types/api";
 import { timeSince } from "@/lib/utils/timeSince";
-import { isUserHasAdminPrivilege } from "@/lib/utils/userPrivileges.util";
+import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
 export const adminUserColumns: Array<ColumnDef<UserSensitiveResponse>> = [
   {
@@ -305,7 +305,7 @@ export const adminUserColumns: Array<ColumnDef<UserSensitiveResponse>> = [
       // eslint-disable-next-line react-hooks/rules-of-hooks -- table context
       const { self } = useSelf();
 
-      const canEdit = self && isUserHasAdminPrivilege(self);
+      const canEdit = self && isUserCanUseAdminUserSearch(self);
 
       return (
         <div className="px-2">
