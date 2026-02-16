@@ -5,6 +5,7 @@ export interface ClanResponse {
   name: string;
   avatar_url?: string | null;
   description?: string | null;
+  tag?: string | null;
   total_pp: number;
   created_at: string;
 }
@@ -42,6 +43,10 @@ export interface EditClanAvatarRequest {
 
 export interface EditClanNameRequest {
   name: string;
+}
+
+export interface EditClanTagRequest {
+  tag?: string;
 }
 
 export interface EditClanDescriptionRequest {

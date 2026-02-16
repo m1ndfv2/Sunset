@@ -1,7 +1,8 @@
 "use client";
 
-import { Edit3Icon, LucideSettings, User as UserIcon } from "lucide-react";
+import { Edit3Icon, LucideSettings, Shield, User as UserIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -31,6 +32,7 @@ import {
   useUserSelf,
   useUserStats,
 } from "@/lib/hooks/api/user/useUser";
+import { useUserClan } from "@/lib/hooks/api/user/useUserClan";
 import { useUserMetadata } from "@/lib/hooks/api/user/useUserMetadata";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
@@ -79,6 +81,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userQuery = userId === self?.user_id ? useUserSelf() : useUser(userId);
   const userStatsQuery = useUserStats(userId, activeMode);
   const userMetadataQuery = useUserMetadata(userId);
+  const userClanQuery = useUserClan(userId, activeMode ?? GameMode.STANDARD);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -191,6 +194,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const user = userQuery.data;
   const userStats = userStatsQuery.data?.stats;
   const userMetada = userMetadataQuery.data;
+  const userClan = userClanQuery.data?.clan ?? null;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -285,6 +289,18 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                 <div className="flex items-start justify-between">
                   <div className="flex flex-wrap gap-2">
                     <UserGeneralInformation user={user} metadata={userMetada} />
+                    {userClan && (
+                      <Link
+                        href={`/clans/${userClan.id}`}
+                        className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-xs text-secondary-foreground hover:opacity-80"
+                      >
+                        <Shield size={12} />
+                        <span>
+                          {userClan.tag ? `[${userClan.tag}] ` : ""}
+                          {userClan.name}
+                        </span>
+                      </Link>
+                    )}
                   </div>
                   <div className="flex space-x-2">
                     {user.user_id === self?.user_id ? (
