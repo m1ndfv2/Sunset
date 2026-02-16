@@ -943,6 +943,17 @@
       "errors": {
         "notFound": "Clan nicht gefunden."
       },
+      "invite": {
+        "creatorHint": "Lade Spieler mit einem teilbaren Link in deinen Clan ein.",
+        "copyInviteLink": "Einladungslink kopieren",
+        "linkCopied": "Einladungslink kopiert",
+        "prompt": "Du wurdest in diesen Clan eingeladen. Möchtest du beitreten?",
+        "accept": "Clan beitreten",
+        "decline": "Ablehnen",
+        "joined": "Du bist dem Clan beigetreten",
+        "joinUnavailable": "Clan-Beitritt nicht möglich",
+        "joinUnavailableHint": "Der Server unterstützt den Endpoint zur Einladung-Annahme noch nicht."
+      },
       "leave": {
         "hint": "Du kannst diesen Clan jederzeit verlassen.",
         "action": "Clan verlassen",

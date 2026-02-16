@@ -943,6 +943,17 @@
       "errors": {
         "notFound": "Clan no encontrado."
       },
+      "invite": {
+        "creatorHint": "Invita jugadores a tu clan usando un enlace compartible.",
+        "copyInviteLink": "Copiar enlace de invitación",
+        "linkCopied": "Enlace de invitación copiado",
+        "prompt": "Has sido invitado a este clan. ¿Quieres unirte?",
+        "accept": "Unirse al clan",
+        "decline": "Rechazar",
+        "joined": "Te has unido al clan",
+        "joinUnavailable": "No se pudo unir al clan",
+        "joinUnavailableHint": "El servidor todavía no admite el endpoint para aceptar invitaciones."
+      },
       "leave": {
         "hint": "Puedes salir de este clan en cualquier momento.",
         "action": "Salir del clan",
