@@ -19,7 +19,13 @@ export async function editClanAvatar(payload: EditClanAvatarRequest) {
   try {
     return await patchClanAvatar(payload);
   }
-  catch {
+  catch (error) {
+    console.warn("[clan] PATCH clan/avatar failed, falling back to POST", {
+      error,
+      hasAvatar: Boolean(payload.avatar_url),
+      avatarLength: payload.avatar_url?.length,
+    });
+
     // Kept for compatibility: osum1nd exposes both PATCH and POST for this endpoint.
     return await poster<ClanDetailsResponse>("clan/avatar", {
       json: payload,

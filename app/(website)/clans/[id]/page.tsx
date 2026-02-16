@@ -134,22 +134,50 @@ export default function ClanDetailsPage() {
   };
 
   const saveClanProfile = async () => {
-    if (!isCreator)
+    if (!isCreator) {
+      console.warn("[clan] blocked save attempt: only creator can save clan profile", {
+        clanId,
+        selfUserId: self?.user_id,
+      });
       return;
+    }
 
     setIsSavingClan(true);
     try {
       const requests: Array<Promise<ClanDetailsResponse>> = [];
 
       const trimmedDescription = description.trim();
-      if ((clan?.description ?? "") !== trimmedDescription) {
+      const isDescriptionChanged = (clan?.description ?? "") !== trimmedDescription;
+      if (isDescriptionChanged) {
+        console.info("[clan] description changed", {
+          clanId,
+          previousLength: (clan?.description ?? "").length,
+          nextLength: trimmedDescription.length,
+        });
         requests.push(editClanDescription({ description: trimmedDescription || undefined }));
       }
 
       if (avatarFile) {
+        console.info("[clan] avatar selected", {
+          clanId,
+          fileName: avatarFile.name,
+          fileType: avatarFile.type,
+          fileSize: avatarFile.size,
+        });
         const encodedAvatar = await fileToDataUrl(avatarFile);
+        console.info("[clan] avatar prepared", {
+          clanId,
+          encodedAvatarLength: encodedAvatar.length,
+        });
         requests.push(editClanAvatar({ avatar_url: encodedAvatar }));
       }
+
+      console.info("[clan] save requests prepared", {
+        clanId,
+        requestsCount: requests.length,
+        isDescriptionChanged,
+        hasAvatarUpdate: Boolean(avatarFile),
+      });
 
       if (requests.length === 0) {
         toast({
@@ -177,6 +205,10 @@ export default function ClanDetailsPage() {
       });
     }
     catch (error) {
+      console.error("[clan] failed to save clan profile", {
+        clanId,
+        error,
+      });
       toast({
         title: error instanceof Error ? error.message : t("manage.updateFailed"),
         variant: "destructive",
