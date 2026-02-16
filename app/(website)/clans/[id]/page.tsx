@@ -267,7 +267,7 @@ export default function ClanDetailsPage() {
       }
 
       toast({
-        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        title: error instanceof Error ? error.message : t("manage.deleteFailed"),
         variant: "destructive",
       });
     }
@@ -311,7 +311,7 @@ export default function ClanDetailsPage() {
   const deleteClan = async () => {
     if (!isCreator || !isMember) {
       toast({
-        title: t("manage.onlyCreatorCanKick"),
+        title: t("manage.onlyCreatorCanDelete"),
         variant: "destructive",
       });
       return;
@@ -329,7 +329,7 @@ export default function ClanDetailsPage() {
       });
 
       toast({
-        title: "Clan deleted",
+        title: t("manage.deleted"),
         variant: "success",
       });
 
@@ -337,7 +337,7 @@ export default function ClanDetailsPage() {
     }
     catch (error) {
       toast({
-        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        title: error instanceof Error ? error.message : t("manage.deleteFailed"),
         variant: "destructive",
       });
     }
@@ -498,9 +498,16 @@ export default function ClanDetailsPage() {
 
                       {isCreator && (
                         <div className="rounded-xl border p-3">
-                          <p className="mb-2 text-sm text-muted-foreground">Delete clan permanently. This action cannot be undone.</p>
-                          <Button onClick={deleteClan} isLoading={isDeleteLoading} variant="destructive">
-                            Delete clan
+                          <p className="mb-2 text-sm text-muted-foreground">{t("manage.deleteHint")}</p>
+                          <Button
+                            onClick={async () => {
+                              if (window.confirm(t("manage.deleteConfirm")))
+                                await deleteClan();
+                            }}
+                            isLoading={isDeleteLoading}
+                            variant="destructive"
+                          >
+                            {t("manage.delete")}
                           </Button>
                         </div>
                       )}
