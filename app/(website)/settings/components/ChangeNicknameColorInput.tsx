@@ -24,10 +24,6 @@ const COLOR_PALETTE = [
   "#000000",
 ];
 
-type MetadataWithNicknameColor = {
-  nickname_color?: string | null;
-};
-
 function normalizeColor(color: string) {
   return /^#(?:[0-9A-F]{3}|[0-9A-F]{6})$/i.test(color)
     ? color
@@ -35,11 +31,11 @@ function normalizeColor(color: string) {
 }
 
 export default function ChangeNicknameColorInput({
-  metadata,
+  initialNicknameColor,
 }: {
-  metadata: MetadataWithNicknameColor;
+  initialNicknameColor?: string | null;
 }) {
-  const initialColor = normalizeColor(metadata.nickname_color ?? DEFAULT_COLOR);
+  const initialColor = normalizeColor(initialNicknameColor ?? DEFAULT_COLOR);
 
   const [color, setColor] = useState(initialColor);
   const { trigger, isMutating } = useEditUserMetadata();
