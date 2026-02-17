@@ -982,12 +982,10 @@
         "save": "変更を保存",
         "saved": "クランを更新しました",
         "updateFailed": "クランを更新できませんでした",
-
         "delete": "クランを削除",
         "deleted": "クランを削除しました",
         "deleteFailed": "クランを削除できませんでした",
         "onlyCreatorCanDelete": "クランを削除できるのは作成者のみです",
-
         "deleteConfirmTitle": "クランを削除しますか？",
         "deleteConfirmDescription": "この操作は元に戻せません。クランとメンバーシップが削除されます。",
         "confirmDelete": "はい、クランを削除",
@@ -996,7 +994,10 @@
         "kick": "追放",
         "kicked": "メンバーをクランから削除しました",
         "kickFailed": "メンバーを削除できませんでした",
-        "onlyCreatorCanKick": "クラン作成者のみメンバーをキックできます"
+        "onlyCreatorCanKick": "クラン作成者のみメンバーをキックできます",
+        "tagLabel": "クランタグ",
+        "tagPlaceholder": "3文字のタグを入力してください（例: DEV）",
+        "tagHint": "タグは英大文字または数字3文字で入力してください。空欄にするとタグを削除できます。"
       }
     }
   }

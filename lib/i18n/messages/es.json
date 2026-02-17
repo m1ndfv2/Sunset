@@ -982,12 +982,10 @@
         "save": "Guardar cambios",
         "saved": "Clan actualizado",
         "updateFailed": "No se pudo actualizar el clan",
-
         "delete": "Eliminar clan",
         "deleted": "Clan eliminado",
         "deleteFailed": "No se pudo eliminar el clan",
         "onlyCreatorCanDelete": "Solo el creador del clan puede eliminar el clan",
-
         "deleteConfirmTitle": "¿Eliminar clan?",
         "deleteConfirmDescription": "Esta acción no se puede deshacer. El clan y sus miembros se eliminarán.",
         "confirmDelete": "Sí, eliminar clan",
@@ -996,7 +994,10 @@
         "kick": "Expulsar",
         "kicked": "Miembro expulsado del clan",
         "kickFailed": "No se pudo expulsar al miembro",
-        "onlyCreatorCanKick": "Solo el creador del clan puede expulsar miembros"
+        "onlyCreatorCanKick": "Solo el creador del clan puede expulsar miembros",
+        "tagLabel": "Etiqueta del clan",
+        "tagPlaceholder": "Introduce una etiqueta de 3 caracteres (p. ej., DEV)",
+        "tagHint": "La etiqueta debe contener 3 letras mayúsculas o dígitos. Déjalo vacío para eliminar la etiqueta."
       }
     }
   }

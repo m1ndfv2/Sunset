@@ -91,9 +91,13 @@ export default function UserSocials({ metadata }: UserSocialsProps) {
         {Object.keys(metadata)
           .filter(
             v =>
-              !["location", "interest", "occupation", "playstyle"].includes(
-                v,
-              )
+              ![
+                "location",
+                "interest",
+                "occupation",
+                "playstyle",
+                "nickname_color",
+              ].includes(v)
               && metadata[v as keyof UserMetadataResponse]?.toString().trim() !== "",
           )
           .map((v) => {
