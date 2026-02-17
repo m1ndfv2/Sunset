@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, LogOut, Shield, User, UserPlus } from "lucide-react";
+import { Crown, LogOut, Shield, Trash2, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import {
   useParams,
@@ -15,6 +15,17 @@ import ImageSelect from "@/components/General/ImageSelect";
 import PrettyHeader from "@/components/General/PrettyHeader";
 import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import UserNickname from "@/components/UserNickname";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +35,7 @@ import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
@@ -68,6 +80,8 @@ export default function ClanDetailsPage() {
   const [isJoinLoading, setIsJoinLoading] = useState(false);
   const [isLeaveLoading, setIsLeaveLoading] = useState(false);
   const [isSavingClan, setIsSavingClan] = useState(false);
+  const [isDeleteClanLoading, setIsDeleteClanLoading] = useState(false);
+  const [kickingUserId, setKickingUserId] = useState<number | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
 
@@ -220,7 +234,7 @@ export default function ClanDetailsPage() {
     }
   };
 
-  const kickMember = async (_userId: number) => {
+  const kickMember = async (userId: number) => {
     if (!isCreator || !isMember) {
       toast({
         title: t("manage.onlyCreatorCanKick"),
@@ -229,10 +243,59 @@ export default function ClanDetailsPage() {
       return;
     }
 
-    toast({
-      title: t("manage.kickFailed"),
-      variant: "destructive",
-    });
+    setKickingUserId(userId);
+
+    try {
+      const updatedClanDetails = await poster<ClanDetailsResponse>(`clan/kick/${userId}`, {});
+
+      await clanQuery.mutate(updatedClanDetails, { revalidate: false });
+
+      toast({
+        title: t("manage.kicked"),
+        variant: "success",
+      });
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.kickFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setKickingUserId(null);
+    }
+  };
+
+  const deleteClan = async () => {
+    if (!isCreator || !isMember) {
+      toast({
+        title: t("manage.onlyCreatorCanDelete"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsDeleteClanLoading(true);
+
+    try {
+      await kyInstance.delete("clan");
+
+      toast({
+        title: t("manage.deleted"),
+        variant: "success",
+      });
+
+      router.push("/clans");
+    }
+    catch (error) {
+      toast({
+        title: error instanceof Error ? error.message : t("manage.deleteFailed"),
+        variant: "destructive",
+      });
+    }
+    finally {
+      setIsDeleteClanLoading(false);
+    }
   };
 
   const acceptInvite = async () => {
@@ -337,9 +400,40 @@ export default function ClanDetailsPage() {
                               maxFileSizeBytes={2 * 1024 * 1024}
                             />
 
-                            <Button onClick={saveClanProfile} isLoading={isSavingClan}>
-                              {t("manage.save")}
-                            </Button>
+                            <div className="flex flex-wrap gap-2">
+                              <Button onClick={saveClanProfile} isLoading={isSavingClan}>
+                                {t("manage.save")}
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="destructive"
+                                    disabled={isDeleteClanLoading}
+                                  >
+                                    <Trash2 size={16} />
+                                    {t("manage.delete")}
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("manage.deleteConfirmTitle")}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      {t("manage.deleteConfirmDescription")}
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("manage.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={deleteClan}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                      disabled={isDeleteClanLoading}
+                                    >
+                                      {isDeleteClanLoading ? t("manage.deleting") : t("manage.confirmDelete")}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -404,7 +498,8 @@ export default function ClanDetailsPage() {
                                   size="sm"
                                   variant="destructive"
                                   onClick={() => kickMember(member.user.user_id)}
-                                  disabled={!isCreator || !isMember}
+                                  disabled={!isCreator || !isMember || kickingUserId !== null}
+                                  isLoading={kickingUserId === member.user.user_id}
                                 >
                                   {t("manage.kick")}
                                 </Button>
