@@ -861,7 +861,8 @@
           "joined": "加入于 <b>{time}</b>",
           "followers": "<b>{count}</b> 粉丝",
           "following": "关注 <b>{count}</b>",
-          "playsWith": "使用 <b>{playstyle}</b> 游玩"
+          "playsWith": "使用 <b>{playstyle}</b> 游玩",
+          "clan": "战队: <b>{clan}</b>"
         },
         "statusText": {
           "lastSeenOn": "，最后在线：{date}"

@@ -1,11 +1,14 @@
 import {
   Calendar,
   Gamepad2,
+  Shield,
   UserIcon,
 } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 
 import { Tooltip } from "@/components/Tooltip";
+import type { ClanResponse } from "@/lib/hooks/api/clan/types";
 import { useUserFriendsCount } from "@/lib/hooks/api/user/useUserFriends";
 import { useT } from "@/lib/i18n/utils";
 import type {
@@ -20,11 +23,13 @@ import { timeSince } from "@/lib/utils/timeSince";
 interface UserGeneralInformationProps {
   user: UserResponse;
   metadata?: UserMetadataResponse;
+  clan?: ClanResponse;
 }
 
 export default function UserGeneralInformation({
   user,
   metadata,
+  clan,
 }: UserGeneralInformationProps) {
   const t = useT("pages.user.components.generalInformation");
   const tPlaystyle = useT("pages.settings.components.playstyle");
@@ -75,6 +80,23 @@ export default function UserGeneralInformation({
           count: friendsData?.following ?? 0,
         })}
       </div>
+
+      {clan && (
+        <div className="flex items-center gap-1">
+          <Shield className="size-4" />
+          {t.rich("clan", {
+            b: chunks => (
+              <Link
+                className="font-bold text-muted-foreground hover:underline"
+                href={`/clans/${clan.id}`}
+              >
+                {chunks}
+              </Link>
+            ),
+            clan: clan.name,
+          })}
+        </div>
+      )}
 
       {userPlaystyle
         && userPlaystyle !== UserPlaystyle.NONE

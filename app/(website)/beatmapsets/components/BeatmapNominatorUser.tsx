@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import UserHoverCard from "@/components/UserHoverCard";
+import UserNickname from "@/components/UserNickname";
 import type { UserResponse } from "@/lib/types/api";
 
 export function BeatmapNominatorUser({ user }: { user: UserResponse }) {
@@ -21,8 +22,7 @@ export function BeatmapNominatorUser({ user }: { user: UserResponse }) {
               className="mr-1 inline-block rounded object-cover align-middle"
             />
           </span>
-
-          {user.username}
+          <UserNickname user={user} />
         </span>
       </Link>
     </UserHoverCard>

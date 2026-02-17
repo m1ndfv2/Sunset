@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useUserSelf } from "@/lib/hooks/api/user/useUser";
@@ -19,6 +19,60 @@ export function useEditUserMetadata() {
   return useSWRMutation(
     data ? `user/${data.user_id}/metadata` : null,
     editMetadata,
+  );
+}
+
+export type EditNicknameColorRequest = {
+  nickname_color: string;
+};
+
+type UserWithNicknameColor = {
+  nickname_color?: string | null;
+};
+
+export function useEditNicknameColor() {
+  const { data } = useUserSelf();
+
+  return useSWRMutation(
+    data ? `user/${data.user_id}/metadata` : null,
+    async (_url: string, { arg }: { arg: EditNicknameColorRequest }) => {
+      console.info("[nickname-color] request", {
+        userId: data?.user_id,
+        payload: arg,
+      });
+
+      const result = await poster("user/edit/nickname-color", {
+        json: arg,
+      });
+
+      console.info("[nickname-color] response", {
+        userId: data?.user_id,
+        result,
+      });
+
+      mutate(
+        `user/${data?.user_id}`,
+        (cachedUser: UserWithNicknameColor | undefined) => {
+          if (!cachedUser) {
+            return cachedUser;
+          }
+
+          return {
+            ...cachedUser,
+            nickname_color: arg.nickname_color,
+          };
+        },
+        false,
+      );
+      mutate(`user/${data?.user_id}/metadata`);
+
+      console.info("[nickname-color] cache invalidated", {
+        userKey: `user/${data?.user_id}`,
+        metadataKey: `user/${data?.user_id}/metadata`,
+      });
+
+      return result;
+    },
   );
 }
 
