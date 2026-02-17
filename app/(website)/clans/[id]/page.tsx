@@ -31,12 +31,12 @@ import UserNickname from "@/components/UserNickname";
 import { useToast } from "@/hooks/use-toast";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
+import { deleteClan } from "@/lib/hooks/api/clan/useDeleteClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
 import { editClanTag } from "@/lib/hooks/api/clan/useEditClanTag";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
-import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
@@ -283,7 +283,7 @@ export default function ClanDetailsPage() {
     }
   };
 
-  const deleteClan = async () => {
+  const onDeleteClan = async () => {
     if (!isCreator || !isMember) {
       toast({
         title: t("manage.onlyCreatorCanDelete"),
@@ -295,7 +295,7 @@ export default function ClanDetailsPage() {
     setIsDeleteClanLoading(true);
 
     try {
-      await kyInstance.delete("clan");
+      await deleteClan();
 
       toast({
         title: t("manage.deleted"),
@@ -453,7 +453,7 @@ export default function ClanDetailsPage() {
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>{t("manage.cancel")}</AlertDialogCancel>
                                     <AlertDialogAction
-                                      onClick={deleteClan}
+                                      onClick={onDeleteClan}
                                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                       disabled={isDeleteClanLoading}
                                     >
