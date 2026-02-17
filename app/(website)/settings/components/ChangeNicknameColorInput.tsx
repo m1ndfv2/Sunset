@@ -6,8 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useEditUserMetadata } from "@/lib/hooks/api/user/useUserMetadata";
+import type { EditUserMetadataRequest } from "@/lib/types/api";
 
 const DEFAULT_COLOR = "#ffffff";
+const COLOR_PALETTE = [
+  "#ffffff",
+  "#f87171",
+  "#fb923c",
+  "#facc15",
+  "#4ade80",
+  "#22d3ee",
+  "#60a5fa",
+  "#a78bfa",
+  "#f472b6",
+  "#94a3b8",
+  "#0f172a",
+  "#000000",
+];
 
 type MetadataWithNicknameColor = {
   nickname_color?: string | null;
@@ -31,10 +46,12 @@ export default function ChangeNicknameColorInput({
   const { toast } = useToast();
 
   const onSave = () => {
+    const payload: EditUserMetadataRequest & { nickname_color: string } = {
+      nickname_color: color,
+    };
+
     trigger(
-      {
-        nickname_color: color,
-      } as any,
+      payload,
       {
         onSuccess: () => {
           toast({
@@ -58,6 +75,27 @@ export default function ChangeNicknameColorInput({
       <label className="text-sm text-muted-foreground">
         Nickname color (Supporter only)
       </label>
+
+      <div className="grid grid-cols-6 gap-2 sm:grid-cols-12">
+        {COLOR_PALETTE.map((paletteColor) => {
+          const isSelected = color.toLowerCase() === paletteColor.toLowerCase();
+
+          return (
+            <button
+              key={paletteColor}
+              type="button"
+              aria-label={`Choose color ${paletteColor}`}
+              onClick={() => setColor(paletteColor)}
+              className="size-8 rounded-full border-2 transition hover:scale-105"
+              style={{
+                backgroundColor: paletteColor,
+                borderColor: isSelected ? "hsl(var(--primary))" : "hsl(var(--border))",
+              }}
+            />
+          );
+        })}
+      </div>
+
       <div className="flex items-center gap-3">
         <Input
           type="color"
