@@ -2489,7 +2489,10 @@
         "kick": "Kick",
         "kicked": "Member removed from clan",
         "kickFailed": "Could not remove member",
-        "onlyCreatorCanKick": "Only the clan creator can kick members"
+        "onlyCreatorCanKick": "Only the clan creator can kick members",
+        "tagLabel": "Clan tag",
+        "tagPlaceholder": "Enter 3-character tag (e.g. DEV)",
+        "tagHint": "Tag must contain 3 uppercase letters or digits. Leave empty to remove the tag."
       }
     }
   }

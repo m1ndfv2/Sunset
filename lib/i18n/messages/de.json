@@ -982,12 +982,10 @@
         "save": "Änderungen speichern",
         "saved": "Clan aktualisiert",
         "updateFailed": "Clan konnte nicht aktualisiert werden",
-
         "delete": "Clan löschen",
         "deleted": "Clan gelöscht",
         "deleteFailed": "Clan konnte nicht gelöscht werden",
         "onlyCreatorCanDelete": "Nur der Clangründer kann den Clan löschen",
-
         "deleteConfirmTitle": "Clan löschen?",
         "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Clan und seine Mitglieder werden entfernt.",
         "confirmDelete": "Ja, Clan löschen",
@@ -996,7 +994,10 @@
         "kick": "Rauswerfen",
         "kicked": "Mitglied aus Clan entfernt",
         "kickFailed": "Mitglied konnte nicht entfernt werden",
-        "onlyCreatorCanKick": "Nur der Clan-Ersteller kann Mitglieder entfernen"
+        "onlyCreatorCanKick": "Nur der Clan-Ersteller kann Mitglieder entfernen",
+        "tagLabel": "Clan-Tag",
+        "tagPlaceholder": "Gib ein Tag mit 3 Zeichen ein (z. B. DEV)",
+        "tagHint": "Das Tag muss aus 3 Großbuchstaben oder Ziffern bestehen. Leer lassen, um das Tag zu entfernen."
       }
     }
   }
