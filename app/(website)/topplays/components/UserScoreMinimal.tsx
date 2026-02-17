@@ -14,6 +14,7 @@ import { useBeatmap } from "@/lib/hooks/api/beatmap/useBeatmap";
 import { useUserStats } from "@/lib/hooks/api/user/useUser";
 import { useT } from "@/lib/i18n/utils";
 import type { ScoreResponse } from "@/lib/types/api";
+import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 
 interface UserScoreMinimalProps {
   score: ScoreResponse;
@@ -32,6 +33,9 @@ export default function UserScoreMinimal({
 
   const user = userStatsQuery.data?.user;
   const beatmap = beatmapQuery.data;
+  const supporterNicknameColor = user
+    ? getSupporterNicknameColor(user)
+    : undefined;
 
   return (
     <div
@@ -108,6 +112,11 @@ export default function UserScoreMinimal({
                           <UserHoverCard user={user} asChild>
                             <span
                               className="truncate"
+                              style={
+                                supporterNicknameColor
+                                  ? { color: supporterNicknameColor }
+                                  : undefined
+                              }
                             >
                               <UserNickname user={user} />
                             </span>
