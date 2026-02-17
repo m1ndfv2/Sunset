@@ -871,7 +871,8 @@
           "joined": "Присоединился <b>{time}</b>",
           "followers": "<b>{count}</b> Подписчиков",
           "following": "<b>{count}</b> Подписок",
-          "playsWith": "Играет с <b>{playstyle}</b>"
+          "playsWith": "Играет с <b>{playstyle}</b>",
+          "clan": "Клан: <b>{clan}</b>"
         },
         "statusText": {
           "lastSeenOn": ", последний раз в сети {date}"

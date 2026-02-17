@@ -8,7 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import {
   useEditNicknameColor,
 } from "@/lib/hooks/api/user/useUserMetadata";
-import { useT } from "@/lib/i18n/utils";
 
 const DEFAULT_COLOR = "#ffffff";
 const COLOR_PALETTE = [
@@ -45,8 +44,6 @@ export default function ChangeNicknameColorInput({
   });
 
   const [color, setColor] = useState(initialColor);
-  const t = useT("pages.settings.components.nicknameColor");
-  const tCommon = useT("pages.settings.common");
   const { trigger, isMutating } = useEditNicknameColor();
   const { toast } = useToast();
 
@@ -69,7 +66,7 @@ export default function ChangeNicknameColorInput({
           });
 
           toast({
-            title: t("toast.success"),
+            title: "Nickname color updated",
             variant: "success",
           });
         },
@@ -80,8 +77,8 @@ export default function ChangeNicknameColorInput({
           });
 
           toast({
-            title: t("toast.error"),
-            description: err.message ?? tCommon("unknownError"),
+            title: "Failed to update nickname color",
+            description: err.message,
             variant: "destructive",
           });
         },
@@ -92,7 +89,7 @@ export default function ChangeNicknameColorInput({
   return (
     <div className="flex flex-col gap-3 lg:w-1/2">
       <label className="text-sm text-muted-foreground">
-        {t("label")}
+        Nickname color (Supporter only)
       </label>
 
       <div className="grid grid-cols-6 gap-2 sm:grid-cols-12">
@@ -103,7 +100,7 @@ export default function ChangeNicknameColorInput({
             <button
               key={paletteColor}
               type="button"
-              aria-label={t("chooseColor", { color: paletteColor })}
+              aria-label={`Choose color ${paletteColor}`}
               onClick={() => setColor(paletteColor)}
               className="size-8 rounded-full border-2 transition hover:scale-105"
               style={{
@@ -127,7 +124,7 @@ export default function ChangeNicknameColorInput({
 
       <div>
         <Button onClick={onSave} disabled={isMutating}>
-          {t("button")}
+          Save nickname color
         </Button>
       </div>
     </div>
