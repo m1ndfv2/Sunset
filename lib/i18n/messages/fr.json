@@ -691,7 +691,8 @@
         "options": "Options",
         "changePassword": "Changer le mot de passe",
         "changeUsername": "Changer le pseudo",
-        "changeCountryFlag": "Changer le drapeau du pays"
+        "changeCountryFlag": "Changer le drapeau du pays",
+        "nicknameColor": "Couleur du pseudo"
       },
       "description": {
         "reminder": "* Rappel : ne publiez pas de contenu inapproprié. Essayez de rester family friendly :)"
@@ -784,6 +785,15 @@
           },
           "note": "* Note : les {type}s sont limités à 5 Mo"
         },
+        "nicknameColor": {
+          "label": "Couleur du pseudo (Supporter uniquement)",
+          "chooseColor": "Choisir la couleur {color}",
+          "button": "Enregistrer la couleur du pseudo",
+          "toast": {
+            "success": "Couleur du pseudo mise à jour",
+            "error": "Échec de la mise à jour de la couleur du pseudo"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "Afficher le bouton « Open on Bancho » sur la page beatmap",
           "useSpaciousUI": "Utiliser une interface espacée (augmenter les espacements)"
@@ -815,6 +825,9 @@
         "userNotFound": "Utilisateur introuvable ou une erreur est survenue.",
         "restricted": "Cela signifie que l'utilisateur a enfreint les règles du serveur et a été restreint.",
         "userDeleted": "L'utilisateur a peut-être été supprimé ou n'existe pas."
+      },
+      "labels": {
+        "clan": "Clan : {clan}"
       },
       "components": {
         "generalTab": {
@@ -968,6 +981,17 @@
         "save": "Enregistrer les modifications",
         "saved": "Clan mis à jour",
         "updateFailed": "Impossible de mettre à jour le clan",
+
+        "delete": "Supprimer le clan",
+        "deleted": "Clan supprimé",
+        "deleteFailed": "Impossible de supprimer le clan",
+        "onlyCreatorCanDelete": "Seul le créateur du clan peut supprimer le clan",
+
+        "deleteConfirmTitle": "Supprimer le clan ?",
+        "deleteConfirmDescription": "Cette action est irréversible. Le clan et ses membres seront supprimés.",
+        "confirmDelete": "Oui, supprimer le clan",
+        "deleting": "Suppression...",
+        "cancel": "Annuler",
         "kick": "Exclure",
         "kicked": "Membre exclu du clan",
         "kickFailed": "Impossible d’exclure le membre",

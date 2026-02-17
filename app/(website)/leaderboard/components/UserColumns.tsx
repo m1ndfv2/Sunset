@@ -21,7 +21,6 @@ import UserNickname from "@/components/UserNickname";
 import UserRankColor from "@/components/UserRankNumber";
 import { useT } from "@/lib/i18n/utils";
 import type { UserResponse, UserStatsResponse } from "@/lib/types/api";
-import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 import numberWith from "@/lib/utils/numberWith";
 
 export function useUserColumns() {

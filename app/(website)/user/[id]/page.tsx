@@ -2,6 +2,7 @@
 
 import { Edit3Icon, LucideSettings, User as UserIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -42,12 +43,24 @@ import {
   GameMode,
   ScoreTableType,
 } from "@/lib/types/api";
-import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
 import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
 import UserTabBeatmaps from "./components/Tabs/UserTabBeatmaps";
 import UserTabMedals from "./components/Tabs/UserTabMedals";
+
+type UserWithClan = UserResponse & {
+  clan?: {
+    id?: number;
+    name?: string;
+  } | null;
+  clan_id?: number | null;
+  clan_name?: string | null;
+};
+
+function parseGameModeFromQuery(mode: string): GameMode | null {
+  return isInstance(mode, GameMode) ? (mode as GameMode) : null;
+}
 
 export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
@@ -71,7 +84,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
 
   const [activeTab, setActiveTab] = useState("tabs.general");
   const [activeMode, setActiveMode] = useState<GameMode | null>(
-    () => (isInstance(mode, GameMode) ? (mode as GameMode) : null),
+    () => parseGameModeFromQuery(mode),
   );
 
   const { self } = useSelf();
@@ -192,9 +205,11 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const user = userQuery.data;
   const userStats = userStatsQuery.data?.stats;
   const userMetada = userMetadataQuery.data;
-  const supporterNicknameColor = user
-    ? getSupporterNicknameColor(user)
-    : undefined;
+
+  const userWithClan = user as UserWithClan | undefined;
+  const clanName = userWithClan?.clan?.name ?? userWithClan?.clan_name ?? null;
+  const clanId = userWithClan?.clan?.id ?? userWithClan?.clan_id ?? null;
+  const userClan = userWithClan?.clan ?? null;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -276,6 +291,25 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                           className="grid text-xs md:flex md:text-base"
                           user={user}
                         />
+
+                        {clanName && (
+                          <div className="mt-1 text-xs md:text-sm">
+                            {clanId
+                              ? (
+                                  <Link
+                                    href={`/clans/${clanId}`}
+                                    className="text-primary hover:underline"
+                                  >
+                                    {t("labels.clan", { clan: clanName })}
+                                  </Link>
+                                )
+                              : (
+                                  <span className="text-muted-foreground">
+                                    {t("labels.clan", { clan: clanName })}
+                                  </span>
+                                )}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <UserRanks user={user} userStats={userStats} />
@@ -286,7 +320,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
               <div className="bg-card px-6 py-4">
                 <div className="flex items-start justify-between">
                   <div className="flex flex-wrap gap-2">
-                    <UserGeneralInformation user={user} metadata={userMetada} />
+                    <UserGeneralInformation user={user} metadata={userMetada} clan={userClan} />
                   </div>
                   <div className="flex space-x-2">
                     {user.user_id === self?.user_id ? (

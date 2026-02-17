@@ -139,7 +139,7 @@ export default function Settings() {
       ...(self?.badges.includes(UserBadge.SUPPORTER) && userMetadata
         ? [{
             icon: <User2Icon />,
-            title: "Nickname color",
+            title: t("sections.nicknameColor"),
             content: (
               <RoundedContent>
                 <div className="mx-auto flex w-11/12 flex-col">
