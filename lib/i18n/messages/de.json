@@ -691,7 +691,8 @@
         "options": "Optionen",
         "changePassword": "Passwort ändern",
         "changeUsername": "Benutzername ändern",
-        "changeCountryFlag": "Länderflagge ändern"
+        "changeCountryFlag": "Länderflagge ändern",
+        "nicknameColor": "Nickname-Farbe"
       },
       "description": {
         "reminder": "* Hinweis: Poste keine unangemessenen Inhalte. Versuch, es familienfreundlich zu halten :)"
@@ -784,6 +785,15 @@
           },
           "note": "* Hinweis: {type}s sind auf 5MB begrenzt"
         },
+        "nicknameColor": {
+          "label": "Nickname-Farbe (nur für Supporter)",
+          "chooseColor": "Farbe {color} wählen",
+          "button": "Nickname-Farbe speichern",
+          "toast": {
+            "success": "Nickname-Farbe aktualisiert",
+            "error": "Nickname-Farbe konnte nicht aktualisiert werden"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "Schaltfläche „Open on Bancho“ auf der Beatmap-Seite anzeigen",
           "useSpaciousUI": "Großzügige UI verwenden (Abstände zwischen Elementen erhöhen)"
@@ -815,6 +825,9 @@
         "userNotFound": "Benutzer nicht gefunden oder ein Fehler ist aufgetreten.",
         "restricted": "Das bedeutet, dass der Benutzer gegen die Serverregeln verstoßen hat und eingeschränkt wurde.",
         "userDeleted": "Der Benutzer wurde möglicherweise gelöscht oder existiert nicht."
+      },
+      "labels": {
+        "clan": "Clan: {clan}"
       },
       "components": {
         "generalTab": {
@@ -968,6 +981,17 @@
         "save": "Änderungen speichern",
         "saved": "Clan aktualisiert",
         "updateFailed": "Clan konnte nicht aktualisiert werden",
+
+        "delete": "Clan löschen",
+        "deleted": "Clan gelöscht",
+        "deleteFailed": "Clan konnte nicht gelöscht werden",
+        "onlyCreatorCanDelete": "Nur der Clangründer kann den Clan löschen",
+
+        "deleteConfirmTitle": "Clan löschen?",
+        "deleteConfirmDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Clan und seine Mitglieder werden entfernt.",
+        "confirmDelete": "Ja, Clan löschen",
+        "deleting": "Wird gelöscht...",
+        "cancel": "Abbrechen",
         "kick": "Rauswerfen",
         "kicked": "Mitglied aus Clan entfernt",
         "kickFailed": "Mitglied konnte nicht entfernt werden",

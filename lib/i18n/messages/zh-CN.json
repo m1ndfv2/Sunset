@@ -691,7 +691,8 @@
         "options": "选项",
         "changePassword": "修改密码",
         "changeUsername": "修改用户名",
-        "changeCountryFlag": "更改国家/地区旗帜"
+        "changeCountryFlag": "更改国家/地区旗帜",
+        "nicknameColor": "昵称颜色"
       },
       "description": {
         "reminder": "* 提醒：请勿发布任何不适当内容。尽量保持适合所有年龄 :)"
@@ -784,6 +785,15 @@
           },
           "note": "* 注意：{type} 最大为 5MB"
         },
+        "nicknameColor": {
+          "label": "昵称颜色（仅 Supporter）",
+          "chooseColor": "选择颜色 {color}",
+          "button": "保存昵称颜色",
+          "toast": {
+            "success": "昵称颜色已更新",
+            "error": "更新昵称颜色失败"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "在谱面页面显示“Open on Bancho”按钮",
           "useSpaciousUI": "使用更宽松的界面（增大元素间距）"
@@ -815,6 +825,9 @@
         "userNotFound": "未找到用户或发生错误。",
         "restricted": "这意味着该用户违反了服务器规则并已被限制。",
         "userDeleted": "该用户可能已被删除或不存在。"
+      },
+      "labels": {
+        "clan": "战队：{clan}"
       },
       "components": {
         "generalTab": {
@@ -968,6 +981,17 @@
         "save": "保存更改",
         "saved": "战队已更新",
         "updateFailed": "无法更新战队",
+
+        "delete": "删除战队",
+        "deleted": "战队已删除",
+        "deleteFailed": "无法删除战队",
+        "onlyCreatorCanDelete": "只有战队创建者可以删除战队",
+
+        "deleteConfirmTitle": "删除战队？",
+        "deleteConfirmDescription": "此操作无法撤销。战队及其成员关系将被删除。",
+        "confirmDelete": "是的，删除战队",
+        "deleting": "删除中...",
+        "cancel": "取消",
         "kick": "移除",
         "kicked": "成员已被移出战队",
         "kickFailed": "无法移除成员",
