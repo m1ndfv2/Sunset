@@ -39,6 +39,13 @@ export default function UserScoreMinimal({
     ? getSupporterNicknameColor(user)
     : undefined;
   const clan = userClanQuery.data?.clan;
+  const normalizedTag = clan?.tag?.trim().toUpperCase();
+  const clanPrefixRegex = normalizedTag
+    ? new RegExp(`^\\s*\\[${normalizedTag}\\]\\s*`, "i")
+    : null;
+  const usernameWithoutTag = clanPrefixRegex && user
+    ? user.username.replace(clanPrefixRegex, "")
+    : user?.username;
 
   return (
     <div
@@ -130,7 +137,12 @@ export default function UserScoreMinimal({
                                     : undefined
                                 }
                               >
-                                <UserNickname user={user} />
+                                <UserNickname
+                                  user={{
+                                    ...user,
+                                    username: usernameWithoutTag ?? user.username,
+                                  }}
+                                />
                               </span>
                             </UserHoverCard>
                           </>

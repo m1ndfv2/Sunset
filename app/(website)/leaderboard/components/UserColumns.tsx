@@ -33,6 +33,13 @@ function LeaderboardUserIdentity({
 }) {
   const userClanQuery = useUserClan(user.user_id, gameMode);
   const clan = userClanQuery.data?.clan;
+  const normalizedTag = clan?.tag?.trim().toUpperCase();
+  const clanPrefixRegex = normalizedTag
+    ? new RegExp(`^\\s*\\[${normalizedTag}\\]\\s*`, "i")
+    : null;
+  const usernameWithoutTag = clanPrefixRegex
+    ? user.username.replace(clanPrefixRegex, "")
+    : user.username;
 
   return (
     <div className="flex min-w-0 items-center gap-1">
@@ -47,7 +54,12 @@ function LeaderboardUserIdentity({
       <UserHoverCard user={user} asChild>
         <Link href={`/user/${user.user_id}`} className="hover:underline">
           <span className="smooth-transition cursor-pointer truncate text-lg font-bold">
-            <UserNickname user={user} />
+            <UserNickname
+              user={{
+                ...user,
+                username: usernameWithoutTag,
+              }}
+            />
           </span>
         </Link>
       </UserHoverCard>
