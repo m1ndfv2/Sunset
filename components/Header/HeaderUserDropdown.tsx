@@ -26,6 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import UserNickname from "@/components/UserNickname";
 import { useT } from "@/lib/i18n/utils";
 import type { UserResponse } from "@/lib/types/api";
 import { isUserCanUseAdminPanel } from "@/lib/utils/userPrivileges.util";
@@ -85,7 +86,7 @@ export default function HeaderUserDropdown({
             </Avatar>
             <div className="z-20 flex flex-col">
               <div className="truncate text-sm font-medium">
-                {self.username}
+                <UserNickname user={self} />
               </div>
 
               <UserPrivilegeBadges

@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UserHoverCard from "@/components/UserHoverCard";
+import UserNickname from "@/components/UserNickname";
 import { useDownloadReplay } from "@/lib/hooks/api/score/useDownloadReplay";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
@@ -60,7 +61,7 @@ export default function ScoreLeaderboardData({
                 className="smooth-transition cursor-pointer font-bold hover:text-primary"
                 href={`/user/${score.user.user_id}`}
               >
-                {score.user.username}
+                <UserNickname user={score.user} />
               </Link>
             </UserHoverCard>
             <Tooltip content={toPrettyDate(score.when_played, true)}>

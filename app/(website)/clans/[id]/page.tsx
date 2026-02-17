@@ -16,6 +16,7 @@ import PrettyHeader from "@/components/General/PrettyHeader";
 import RoundedContent from "@/components/General/RoundedContent";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
+import UserNickname from "@/components/UserNickname";
 import { useToast } from "@/hooks/use-toast";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
@@ -382,7 +383,7 @@ export default function ClanDetailsPage() {
                               />
                               <div>
                                 <Link href={`/user/${member.user.user_id}`} className="font-medium hover:underline">
-                                  {member.user.username}
+                                  <UserNickname user={member.user} />
                                 </Link>
                                 <p className="text-xs text-muted-foreground">
                                   {member.role === "creator"

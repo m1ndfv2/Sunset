@@ -25,6 +25,7 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import Spinner from "@/components/Spinner";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
+import UserNickname from "@/components/UserNickname";
 import {
   useUser,
   useUserSelf,
@@ -253,13 +254,8 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                           >
                             <span
                               className="ml-full mt-0.5 truncate text-lg font-bold md:text-3xl"
-                              style={
-                                supporterNicknameColor
-                                  ? { color: supporterNicknameColor }
-                                  : undefined
-                              }
                             >
-                              {user.username}
+                              <UserNickname user={user} />
                             </span>
                           </Tooltip>
 

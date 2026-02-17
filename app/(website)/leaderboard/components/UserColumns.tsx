@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UserHoverCard from "@/components/UserHoverCard";
+import UserNickname from "@/components/UserNickname";
 import UserRankColor from "@/components/UserRankNumber";
 import { useT } from "@/lib/i18n/utils";
 import type { UserResponse, UserStatsResponse } from "@/lib/types/api";
@@ -104,10 +105,7 @@ export function useUserColumns() {
           header: "",
           cell: ({ row }) => {
             const userId = row.original.user.user_id;
-            const { username, avatar_url } = row.original.user;
-            const supporterNicknameColor = getSupporterNicknameColor(
-              row.original.user,
-            );
+            const { avatar_url } = row.original.user;
 
             return (
               <div className="relative flex flex-row items-center space-x-2 p-3">
@@ -121,13 +119,8 @@ export function useUserColumns() {
                   <Link href={`/user/${userId}`} className="hover:underline">
                     <span
                       className="smooth-transition cursor-pointer text-lg font-bold"
-                      style={
-                        supporterNicknameColor
-                          ? { color: supporterNicknameColor }
-                          : undefined
-                      }
                     >
-                      {username}
+                      <UserNickname user={row.original.user} />
                     </span>
                   </Link>
                 </UserHoverCard>

@@ -9,6 +9,7 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserHoverCard from "@/components/UserHoverCard";
+import UserNickname from "@/components/UserNickname";
 import { useBeatmap } from "@/lib/hooks/api/beatmap/useBeatmap";
 import { useUserStats } from "@/lib/hooks/api/user/useUser";
 import { useT } from "@/lib/i18n/utils";
@@ -117,7 +118,7 @@ export default function UserScoreMinimal({
                                   : undefined
                               }
                             >
-                              {user.username}
+                              <UserNickname user={user} />
                             </span>
                           </UserHoverCard>
                         ) : (
