@@ -20,29 +20,9 @@ import { useClansLeaderboard } from "@/lib/hooks/api/clan/useClansLeaderboard";
 import { useT } from "@/lib/i18n/utils";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
+import { fileToClanAvatarDataUrl } from "@/lib/utils/clanAvatar.util";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
-
-async function fileToDataUrl(file: File): Promise<string> {
-  const bitmap = await createImageBitmap(file);
-  const canvas = document.createElement("canvas");
-  const maxSide = 64;
-  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
-
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx)
-    throw new Error("Failed to process image");
-
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-
-  const dataUrl = canvas.toDataURL("image/webp", 0.8);
-  bitmap.close();
-
-  return dataUrl;
-}
 
 export default function ClansPage() {
   const pathname = usePathname();
@@ -114,11 +94,7 @@ export default function ClansPage() {
     setIsCreating(true);
 
     try {
-      const encodedAvatar = avatarFile ? await fileToDataUrl(avatarFile) : undefined;
-
-      if (encodedAvatar && encodedAvatar.length > 2048) {
-        throw new Error(t("form.avatarTooLarge"));
-      }
+      const encodedAvatar = avatarFile ? await fileToClanAvatarDataUrl(avatarFile) : undefined;
 
       const payload: CreateClanRequest = {
         name: clanName.trim(),
@@ -132,7 +108,13 @@ export default function ClansPage() {
       window.location.href = `/clans/${created.clan.id}`;
     }
     catch (error) {
-      setCreateError(error instanceof Error ? error.message : t("form.createFailed"));
+      const errorMessage = error instanceof Error
+        ? error.message === "avatarTooLarge"
+          ? t("form.avatarTooLarge")
+          : error.message
+        : t("form.createFailed");
+
+      setCreateError(errorMessage);
     }
     finally {
       setIsCreating(false);

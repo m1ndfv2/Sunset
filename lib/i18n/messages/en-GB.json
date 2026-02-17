@@ -986,12 +986,10 @@
         "save": "save changes",
         "saved": "cwan updated",
         "updateFailed": "couwd not update cwan",
-
         "delete": "Delete clan",
         "deleted": "Clan deleted",
         "deleteFailed": "Could not delete clan",
         "onlyCreatorCanDelete": "Only the clan creator can delete the clan",
-
         "deleteConfirmTitle": "Delete clan?",
         "deleteConfirmDescription": "This action cannot be undone. The clan and its membership will be removed.",
         "confirmDelete": "Yes, delete clan",
@@ -1000,7 +998,10 @@
         "kick": "kick",
         "kicked": "membew wemoved fwom cwan",
         "kickFailed": "couwd not wemove membew",
-        "onlyCreatorCanKick": "onwy da cwan cweatow can kick membews"
+        "onlyCreatorCanKick": "onwy da cwan cweatow can kick membews",
+        "tagLabel": "Clan tag",
+        "tagPlaceholder": "Enter 3-character tag (e.g. DEV)",
+        "tagHint": "Tag must contain 3 uppercase letters or digits. Leave empty to remove the tag."
       }
     }
   }

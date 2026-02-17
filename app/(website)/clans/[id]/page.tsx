@@ -31,36 +31,17 @@ import UserNickname from "@/components/UserNickname";
 import { useToast } from "@/hooks/use-toast";
 import type { ClanDetailsResponse } from "@/lib/hooks/api/clan/types";
 import { useClan } from "@/lib/hooks/api/clan/useClan";
+import { deleteClan } from "@/lib/hooks/api/clan/useDeleteClan";
 import { editClanAvatar } from "@/lib/hooks/api/clan/useEditClanAvatar";
 import { editClanDescription } from "@/lib/hooks/api/clan/useEditClanDescription";
+import { editClanTag } from "@/lib/hooks/api/clan/useEditClanTag";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
-import { kyInstance } from "@/lib/services/fetcher";
 import poster from "@/lib/services/poster";
 import { GameMode } from "@/lib/types/api";
+import { fileToClanAvatarDataUrl } from "@/lib/utils/clanAvatar.util";
 import numberWith from "@/lib/utils/numberWith";
 import { isInstance } from "@/lib/utils/type.util";
-
-async function fileToDataUrl(file: File): Promise<string> {
-  const bitmap = await createImageBitmap(file);
-  const canvas = document.createElement("canvas");
-  const maxSide = 128;
-  const scale = Math.min(maxSide / bitmap.width, maxSide / bitmap.height, 1);
-
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx)
-    throw new Error("Failed to process image");
-
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-
-  const dataUrl = canvas.toDataURL("image/webp", 0.8);
-  bitmap.close();
-
-  return dataUrl;
-}
 
 export default function ClanDetailsPage() {
   const params = useParams<{ id: string }>();
@@ -71,6 +52,7 @@ export default function ClanDetailsPage() {
   const { self } = useSelf();
 
   const t = useT("pages.clansDetails");
+  const tClansForm = useT("pages.clans.form");
 
   const mode = searchParams.get("mode") ?? GameMode.STANDARD;
   const [activeMode, setActiveMode] = useState(
@@ -84,6 +66,7 @@ export default function ClanDetailsPage() {
   const [kickingUserId, setKickingUserId] = useState<number | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [tag, setTag] = useState("");
 
   const clanId = Number(params.id);
   const clanQuery = useClan(clanId, activeMode);
@@ -100,7 +83,8 @@ export default function ClanDetailsPage() {
 
   useEffect(() => {
     setDescription(clan?.description ?? "");
-  }, [clan?.description]);
+    setTag(clan?.tag ?? "");
+  }, [clan?.description, clan?.tag]);
 
   const createInviteLink = async () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -162,6 +146,8 @@ export default function ClanDetailsPage() {
       const requests: Array<Promise<ClanDetailsResponse>> = [];
 
       const trimmedDescription = description.trim();
+      const normalizedTag = tag.trim().toUpperCase();
+
       const isDescriptionChanged = (clan?.description ?? "") !== trimmedDescription;
       if (isDescriptionChanged) {
         console.info("[clan] description changed", {
@@ -172,6 +158,17 @@ export default function ClanDetailsPage() {
         requests.push(editClanDescription({ description: trimmedDescription || undefined }));
       }
 
+      const currentTag = (clan?.tag ?? "").toUpperCase();
+      const isTagChanged = currentTag !== normalizedTag;
+      if (isTagChanged) {
+        console.info("[clan] tag changed", {
+          clanId,
+          previousTag: clan?.tag ?? null,
+          nextTag: normalizedTag || null,
+        });
+        requests.push(editClanTag({ tag: normalizedTag || undefined }));
+      }
+
       if (avatarFile) {
         console.info("[clan] avatar selected", {
           clanId,
@@ -179,11 +176,12 @@ export default function ClanDetailsPage() {
           fileType: avatarFile.type,
           fileSize: avatarFile.size,
         });
-        const encodedAvatar = await fileToDataUrl(avatarFile);
+        const encodedAvatar = await fileToClanAvatarDataUrl(avatarFile);
         console.info("[clan] avatar prepared", {
           clanId,
           encodedAvatarLength: encodedAvatar.length,
         });
+
         requests.push(editClanAvatar({ avatar_url: encodedAvatar }));
       }
 
@@ -191,6 +189,7 @@ export default function ClanDetailsPage() {
         clanId,
         requestsCount: requests.length,
         isDescriptionChanged,
+        isTagChanged,
         hasAvatarUpdate: Boolean(avatarFile),
       });
 
@@ -224,8 +223,15 @@ export default function ClanDetailsPage() {
         clanId,
         error,
       });
+
+      const errorMessage = error instanceof Error
+        ? error.message === "avatarTooLarge"
+          ? tClansForm("avatarTooLarge")
+          : error.message
+        : t("manage.updateFailed");
+
       toast({
-        title: error instanceof Error ? error.message : t("manage.updateFailed"),
+        title: errorMessage,
         variant: "destructive",
       });
     }
@@ -266,7 +272,7 @@ export default function ClanDetailsPage() {
     }
   };
 
-  const deleteClan = async () => {
+  const onDeleteClan = async () => {
     if (!isCreator || !isMember) {
       toast({
         title: t("manage.onlyCreatorCanDelete"),
@@ -278,7 +284,7 @@ export default function ClanDetailsPage() {
     setIsDeleteClanLoading(true);
 
     try {
-      await kyInstance.delete("clan");
+      await deleteClan();
 
       toast({
         title: t("manage.deleted"),
@@ -362,7 +368,7 @@ export default function ClanDetailsPage() {
                             )}
 
                         <div>
-                          <p className="text-xl font-semibold">{clan.name}</p>
+                          <p className="text-xl font-semibold">{clan.name}{clan.tag ? ` [${clan.tag}]` : ""}</p>
                           {clan.description && (
                             <p className="text-sm text-muted-foreground">{clan.description}</p>
                           )}
@@ -385,6 +391,18 @@ export default function ClanDetailsPage() {
 
                           <div className="space-y-2 pt-2">
                             <p className="text-sm text-muted-foreground">{t("manage.header")}</p>
+                            <label className="text-xs text-muted-foreground">{t("manage.tagLabel")}</label>
+                            <input
+                              className="h-10 w-full rounded-lg bg-card px-2 text-sm text-current"
+                              value={tag}
+                              onChange={(e) => {
+                                const normalizedValue = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9]/g, "");
+                                setTag(normalizedValue.slice(0, 3));
+                              }}
+                              placeholder={t("manage.tagPlaceholder")}
+                              maxLength={3}
+                            />
+                            <p className="text-xs text-muted-foreground">{t("manage.tagHint")}</p>
                             <label className="text-xs text-muted-foreground">{t("manage.descriptionLabel")}</label>
                             <textarea
                               className="h-24 max-h-64 w-full rounded-lg bg-card p-2 text-sm text-current"
@@ -424,7 +442,7 @@ export default function ClanDetailsPage() {
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>{t("manage.cancel")}</AlertDialogCancel>
                                     <AlertDialogAction
-                                      onClick={deleteClan}
+                                      onClick={onDeleteClan}
                                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                       disabled={isDeleteClanLoading}
                                     >

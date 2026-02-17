@@ -982,12 +982,10 @@
         "save": "保存更改",
         "saved": "战队已更新",
         "updateFailed": "无法更新战队",
-
         "delete": "删除战队",
         "deleted": "战队已删除",
         "deleteFailed": "无法删除战队",
         "onlyCreatorCanDelete": "只有战队创建者可以删除战队",
-
         "deleteConfirmTitle": "删除战队？",
         "deleteConfirmDescription": "此操作无法撤销。战队及其成员关系将被删除。",
         "confirmDelete": "是的，删除战队",
@@ -996,7 +994,10 @@
         "kick": "移除",
         "kicked": "成员已被移出战队",
         "kickFailed": "无法移除成员",
-        "onlyCreatorCanKick": "只有公会创建者可以移除成员"
+        "onlyCreatorCanKick": "只有公会创建者可以移除成员",
+        "tagLabel": "战队标签",
+        "tagPlaceholder": "输入 3 个字符的标签（例如 DEV）",
+        "tagHint": "标签必须包含 3 个大写字母或数字。留空可移除标签。"
       }
     }
   }

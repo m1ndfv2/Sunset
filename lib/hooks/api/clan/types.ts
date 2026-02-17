@@ -3,6 +3,7 @@ import type { GameMode, UserResponse } from "@/lib/types/api";
 export interface ClanResponse {
   id: number;
   name: string;
+  tag?: string | null;
   avatar_url?: string | null;
   description?: string | null;
   total_pp: number;
@@ -46,4 +47,8 @@ export interface EditClanNameRequest {
 
 export interface EditClanDescriptionRequest {
   description?: string;
+}
+
+export interface EditClanTagRequest {
+  tag?: string;
 }
