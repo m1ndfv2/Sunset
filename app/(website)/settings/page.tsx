@@ -12,6 +12,7 @@ import { useMemo } from "react";
 
 import ChangeCountryInput from "@/app/(website)/settings/components/ChangeCountryInput";
 import ChangeDescriptionInput from "@/app/(website)/settings/components/ChangeDescriptionInput";
+import ChangeNicknameColorInput from "@/app/(website)/settings/components/ChangeNicknameColorInput";
 import ChangePasswordInput from "@/app/(website)/settings/components/ChangePasswordInput";
 import ChangePlaystyleForm from "@/app/(website)/settings/components/ChangePlaystyleForm";
 import ChangeSocialsForm from "@/app/(website)/settings/components/ChangeSocialsForm";
@@ -30,11 +31,20 @@ import {
 import { useUserMetadata } from "@/lib/hooks/api/user/useUserMetadata";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import type { UserMetadataResponse } from "@/lib/types/api";
+import { UserBadge } from "@/lib/types/api";
+
+type UserMetadataWithNicknameColor = UserMetadataResponse & {
+  nickname_color?: string | null;
+};
 
 export default function Settings() {
   const t = useT("pages.settings");
   const { self, isLoading } = useSelf();
   const { data: userMetadata } = useUserMetadata(self?.user_id ?? null);
+  const supporterNicknameColor = (
+    userMetadata as UserMetadataWithNicknameColor | undefined
+  )?.nickname_color;
 
   const settingsContent = useMemo(
     () => [
@@ -126,6 +136,19 @@ export default function Settings() {
           </RoundedContent>
         ),
       },
+      ...(self?.badges.includes(UserBadge.SUPPORTER) && userMetadata
+        ? [{
+            icon: <User2Icon />,
+            title: "Nickname color",
+            content: (
+              <RoundedContent>
+                <div className="mx-auto flex w-11/12 flex-col">
+                  <ChangeNicknameColorInput initialNicknameColor={supporterNicknameColor} />
+                </div>
+              </RoundedContent>
+            ),
+          }]
+        : []),
       {
         icon: <LockOpenIcon />,
         title: t("sections.changePassword"),
@@ -160,7 +183,7 @@ export default function Settings() {
         ),
       },
     ],
-    [t, self, userMetadata],
+    [t, self, supporterNicknameColor, userMetadata],
   );
 
   const defaultOpenValues = useMemo(

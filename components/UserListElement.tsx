@@ -9,6 +9,7 @@ import { FriendshipButton } from "@/components/FriendshipButton";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import { Tooltip } from "@/components/Tooltip";
 import { MaterialSymbolsCircleOutline } from "@/components/ui/icons/circle-outline";
+import UserNickname from "@/components/UserNickname";
 import type { UserResponse } from "@/lib/types/api";
 
 interface UserListItemProps {
@@ -59,7 +60,9 @@ export function UserListItem({
                 content={user.username}
                 align="start"
               >
-                <h3 className="line-clamp-1 font-medium">{user.username}</h3>
+                <h3 className="line-clamp-1 font-medium">
+                  <UserNickname user={user} />
+                </h3>
               </Tooltip>
 
               <div

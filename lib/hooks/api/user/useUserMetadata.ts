@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useUserSelf } from "@/lib/hooks/api/user/useUser";
@@ -19,6 +19,28 @@ export function useEditUserMetadata() {
   return useSWRMutation(
     data ? `user/${data.user_id}/metadata` : null,
     editMetadata,
+  );
+}
+
+export type EditNicknameColorRequest = {
+  nickname_color: string;
+};
+
+export function useEditNicknameColor() {
+  const { data } = useUserSelf();
+
+  return useSWRMutation(
+    data ? `user/${data.user_id}/metadata` : null,
+    async (_url: string, { arg }: { arg: EditNicknameColorRequest }) => {
+      const result = await poster("user/edit/nickname-color", {
+        json: arg,
+      });
+
+      mutate(`user/${data?.user_id}`);
+      mutate(`user/${data?.user_id}/metadata`);
+
+      return result;
+    },
   );
 }
 
