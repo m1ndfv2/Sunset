@@ -874,7 +874,8 @@
           "joined": "<b>{time}</b> に参加",
           "followers": "フォロワー <b>{count}</b>",
           "following": "フォロー中 <b>{count}</b>",
-          "playsWith": "プレイスタイル：<b>{playstyle}</b>"
+          "playsWith": "プレイスタイル：<b>{playstyle}</b>",
+          "clan": "クラン: <b>{clan}</b>"
         },
         "statusText": {
           "lastSeenOn": "（最終アクセス：{date}）"

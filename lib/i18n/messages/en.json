@@ -2312,6 +2312,10 @@
           "playsWith": {
             "text": "Plays with <b>{playstyle}</b>",
             "context": "Text showing playstyle, includes playstyle as parameter with formatting"
+          },
+          "clan": {
+            "text": "Clan: <b>{clan}</b>",
+            "context": "Text showing user's clan name and linking the clan name"
           }
         },
         "statusText": {

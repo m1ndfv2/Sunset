@@ -13,3 +13,12 @@ export function useClan(id: number, mode: GameMode) {
     fetcher,
   );
 }
+
+export function useUserClan(userId: number, mode: GameMode) {
+  return useSWR<ClanDetailsResponse>(
+    Number.isFinite(userId) && userId > 0
+      ? `user/${userId}/clan?mode=${mode}`
+      : null,
+    fetcher,
+  );
+}
