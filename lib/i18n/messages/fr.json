@@ -982,12 +982,10 @@
         "save": "Enregistrer les modifications",
         "saved": "Clan mis à jour",
         "updateFailed": "Impossible de mettre à jour le clan",
-
         "delete": "Supprimer le clan",
         "deleted": "Clan supprimé",
         "deleteFailed": "Impossible de supprimer le clan",
         "onlyCreatorCanDelete": "Seul le créateur du clan peut supprimer le clan",
-
         "deleteConfirmTitle": "Supprimer le clan ?",
         "deleteConfirmDescription": "Cette action est irréversible. Le clan et ses membres seront supprimés.",
         "confirmDelete": "Oui, supprimer le clan",
@@ -996,7 +994,10 @@
         "kick": "Exclure",
         "kicked": "Membre exclu du clan",
         "kickFailed": "Impossible d’exclure le membre",
-        "onlyCreatorCanKick": "Seul le créateur du clan peut exclure des membres"
+        "onlyCreatorCanKick": "Seul le créateur du clan peut exclure des membres",
+        "tagLabel": "Tag du clan",
+        "tagPlaceholder": "Entrez un tag de 3 caractères (ex. DEV)",
+        "tagHint": "Le tag doit contenir 3 lettres majuscules ou chiffres. Laissez vide pour supprimer le tag."
       }
     }
   }
