@@ -42,6 +42,7 @@ import {
   GameMode,
   ScoreTableType,
 } from "@/lib/types/api";
+import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
 import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
@@ -191,6 +192,9 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const user = userQuery.data;
   const userStats = userStatsQuery.data?.stats;
   const userMetada = userMetadataQuery.data;
+  const supporterNicknameColor = user
+    ? getSupporterNicknameColor(user)
+    : undefined;
 
   return (
     <div className="flex flex-col space-y-4">
