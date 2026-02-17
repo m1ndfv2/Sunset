@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UserHoverCard from "@/components/UserHoverCard";
+import UserNickname from "@/components/UserNickname";
 import { useDownloadReplay } from "@/lib/hooks/api/score/useDownloadReplay";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
@@ -106,7 +107,6 @@ export function useScoreColumns(): Array<ColumnDef<ScoreResponse>> {
           sortableHeader({ column, title: t("columns.player") }),
         cell: ({ row }) => {
           const userId = row.original.user.user_id;
-          const { username } = row.original.user;
 
           return (
             <div className="flex flex-row items-center space-x-2">
@@ -123,7 +123,7 @@ export function useScoreColumns(): Array<ColumnDef<ScoreResponse>> {
 
               <UserHoverCard user={row.original.user} asChild>
                 <Link href={`/user/${userId}`} className="hover:underline">
-                  {username}
+                  <UserNickname user={row.original.user} />
                 </Link>
               </UserHoverCard>
             </div>
