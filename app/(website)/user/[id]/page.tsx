@@ -203,7 +203,6 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const user = userQuery.data;
   const userStats = userStatsQuery.data?.stats;
   const userMetada = userMetadataQuery.data;
-  const userClan = userClanQuery.data?.clan;
 
   const userWithClan = user as UserWithClan | undefined;
   const clanName = userWithClan?.clan?.name ?? userWithClan?.clan_name ?? null;
