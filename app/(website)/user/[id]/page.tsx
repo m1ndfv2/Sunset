@@ -27,6 +27,7 @@ import Spinner from "@/components/Spinner";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
 import UserNickname from "@/components/UserNickname";
+import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import {
   useUser,
   useUserSelf,
@@ -89,6 +90,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userQuery = userId === self?.user_id ? useUserSelf() : useUser(userId);
   const userStatsQuery = useUserStats(userId, activeMode);
   const userMetadataQuery = useUserMetadata(userId);
+  const userClanQuery = useUserClan(userId, activeMode ?? GameMode.Standard);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -315,7 +317,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
               <div className="bg-card px-6 py-4">
                 <div className="flex items-start justify-between">
                   <div className="flex flex-wrap gap-2">
-                    <UserGeneralInformation user={user} metadata={userMetada} />
+                    <UserGeneralInformation user={user} metadata={userMetada} clan={userClan} />
                   </div>
                   <div className="flex space-x-2">
                     {user.user_id === self?.user_id ? (

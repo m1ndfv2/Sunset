@@ -878,7 +878,8 @@
           "joined": "Joined <b>{time}</b>",
           "followers": "<b>{count}</b> Fowwowews",
           "following": "<b>{count}</b> Fowwowing",
-          "playsWith": "Pways wif <b>{playstyle}</b>"
+          "playsWith": "Pways wif <b>{playstyle}</b>",
+          "clan": "Cwan: <b>{clan}</b>"
         },
         "statusText": {
           "lastSeenOn": ", wast seen on {date}"
