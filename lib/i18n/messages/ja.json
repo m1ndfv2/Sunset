@@ -691,7 +691,8 @@
         "options": "オプション",
         "changePassword": "パスワードを変更",
         "changeUsername": "ユーザー名を変更",
-        "changeCountryFlag": "国旗を変更"
+        "changeCountryFlag": "国旗を変更",
+        "nicknameColor": "ニックネームの色"
       },
       "description": {
         "reminder": "* 注意：不適切な内容は投稿しないでください。できるだけ全年齢向けにしましょう :)"
@@ -784,6 +785,15 @@
           },
           "note": "* 注意：{type}は5MBまでです"
         },
+        "nicknameColor": {
+          "label": "ニックネームの色（Supporter限定）",
+          "chooseColor": "色 {color} を選択",
+          "button": "ニックネームの色を保存",
+          "toast": {
+            "success": "ニックネームの色を更新しました",
+            "error": "ニックネームの色の更新に失敗しました"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "ビートマップページに「Open on Bancho」ボタンを表示する",
           "useSpaciousUI": "ゆったりUIを使用（要素間の余白を増やす）"
@@ -815,6 +825,9 @@
         "userNotFound": "ユーザーが見つからないか、エラーが発生しました。",
         "restricted": "このユーザーはサーバールールに違反し、制限されています。",
         "userDeleted": "ユーザーが削除されたか、存在しない可能性があります。"
+      },
+      "labels": {
+        "clan": "クラン: {clan}"
       },
       "components": {
         "generalTab": {
@@ -968,6 +981,17 @@
         "save": "変更を保存",
         "saved": "クランを更新しました",
         "updateFailed": "クランを更新できませんでした",
+
+        "delete": "クランを削除",
+        "deleted": "クランを削除しました",
+        "deleteFailed": "クランを削除できませんでした",
+        "onlyCreatorCanDelete": "クランを削除できるのは作成者のみです",
+
+        "deleteConfirmTitle": "クランを削除しますか？",
+        "deleteConfirmDescription": "この操作は元に戻せません。クランとメンバーシップが削除されます。",
+        "confirmDelete": "はい、クランを削除",
+        "deleting": "削除中...",
+        "cancel": "キャンセル",
         "kick": "追放",
         "kicked": "メンバーをクランから削除しました",
         "kickFailed": "メンバーを削除できませんでした",
