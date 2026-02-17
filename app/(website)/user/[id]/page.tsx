@@ -27,6 +27,7 @@ import Spinner from "@/components/Spinner";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
 import UserNickname from "@/components/UserNickname";
+import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import {
   useUser,
   useUserSelf,
@@ -93,6 +94,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userQuery = userId === self?.user_id ? useUserSelf() : useUser(userId);
   const userStatsQuery = useUserStats(userId, activeMode);
   const userMetadataQuery = useUserMetadata(userId);
+  const userClanQuery = useUserClan(userId, activeMode ?? GameMode.STANDARD);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
