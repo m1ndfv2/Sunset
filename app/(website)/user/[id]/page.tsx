@@ -25,7 +25,7 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import Spinner from "@/components/Spinner";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
-import UserRankColor from "@/components/UserRankNumber";
+import UserNickname from "@/components/UserNickname";
 import {
   useUser,
   useUserSelf,
@@ -248,13 +248,11 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                             content={user.username}
                             align="start"
                           >
-                            <UserRankColor
+                            <span
                               className="ml-full mt-0.5 truncate text-lg font-bold md:text-3xl"
-                              variant="primary"
-                              rank={userStats?.rank ?? -1}
                             >
-                              {user.username}
-                            </UserRankColor>
+                              <UserNickname user={user} />
+                            </span>
                           </Tooltip>
 
                           <UserPreviousUsernamesTooltip

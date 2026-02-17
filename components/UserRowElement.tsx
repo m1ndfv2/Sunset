@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import type { UserResponse } from "@/lib/types/api";
 
 import ImageWithFallback from "./ImageWithFallback";
+import UserNickname from "./UserNickname";
 
 interface UserProfileBannerProps {
   user: UserResponse;
@@ -55,7 +56,7 @@ export default function UserRowElement({
                 className="mr-2 size-5"
               />
               <h2 className="mr-2 text-lg font-bold text-white">
-                {user.username}
+                <UserNickname user={user} />
               </h2>
             </div>
           </div>

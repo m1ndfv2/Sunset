@@ -11,6 +11,7 @@ import { MaterialSymbolsCircleOutline } from "@/components/ui/icons/circle-outli
 import type { UserResponse } from "@/lib/types/api";
 
 import ImageWithFallback from "./ImageWithFallback";
+import UserNickname from "./UserNickname";
 
 interface UserProfileBannerProps {
   user: UserResponse;
@@ -62,7 +63,7 @@ export default function UserElement({
             <div className="line-clamp-1">
               <div className="mb-1 line-clamp-1 flex items-center">
                 <h2 className="mr-2 truncate font-bold text-white md:text-lg lg:text-xl">
-                  {user.username}
+                  <UserNickname user={user} />
                 </h2>
               </div>
               <div className="flex items-center">

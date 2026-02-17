@@ -14,6 +14,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { MaterialSymbolsCircleOutline } from "@/components/ui/icons/circle-outline";
+import UserNickname from "@/components/UserNickname";
 import type { UserResponse } from "@/lib/types/api";
 
 export default function UserHoverCard({
@@ -67,7 +68,7 @@ export default function UserHoverCard({
               <div className="line-clamp-1">
                 <div className="line-clamp-1 flex items-center">
                   <h2 className="mr-2 truncate font-bold text-white">
-                    {user.username}
+                    <UserNickname user={user} />
                   </h2>
                 </div>
                 <div className="flex items-center">
