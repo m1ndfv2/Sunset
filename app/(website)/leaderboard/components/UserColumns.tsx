@@ -20,6 +20,7 @@ import UserHoverCard from "@/components/UserHoverCard";
 import UserRankColor from "@/components/UserRankNumber";
 import { useT } from "@/lib/i18n/utils";
 import type { UserResponse, UserStatsResponse } from "@/lib/types/api";
+import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 import numberWith from "@/lib/utils/numberWith";
 
 export function useUserColumns() {
@@ -104,12 +105,9 @@ export function useUserColumns() {
           cell: ({ row }) => {
             const userId = row.original.user.user_id;
             const { username, avatar_url } = row.original.user;
-
-            // eslint-disable-next-line react-hooks/rules-of-hooks -- table context
-            const table = useContext(UserTableContext);
-            const { pageIndex } = table.getState().pagination;
-            const { pageSize } = table.getState().pagination;
-            const userRank = row.index + pageIndex * pageSize + 1;
+            const supporterNicknameColor = getSupporterNicknameColor(
+              row.original.user,
+            );
 
             return (
               <div className="relative flex flex-row items-center space-x-2 p-3">
@@ -121,13 +119,16 @@ export function useUserColumns() {
 
                 <UserHoverCard user={row.original.user} asChild>
                   <Link href={`/user/${userId}`} className="hover:underline">
-                    <UserRankColor
-                      rank={userRank}
-                      variant="primary"
-                      className="smooth-transition cursor-pointer text-lg font-bold "
+                    <span
+                      className="smooth-transition cursor-pointer text-lg font-bold"
+                      style={
+                        supporterNicknameColor
+                          ? { color: supporterNicknameColor }
+                          : undefined
+                      }
                     >
                       {username}
-                    </UserRankColor>
+                    </span>
                   </Link>
                 </UserHoverCard>
               </div>
