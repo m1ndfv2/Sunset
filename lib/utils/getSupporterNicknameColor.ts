@@ -2,17 +2,31 @@ import type { UserResponse } from "@/lib/types/api";
 import { UserBadge } from "@/lib/types/api";
 
 type UserWithNicknameColor = UserResponse & { nickname_color?: string | null };
+type UserWithAdditionalNicknameColorFields = UserResponse & {
+  nicknameColor?: string | null;
+  metadata?: {
+    nickname_color?: string | null;
+    nicknameColor?: string | null;
+  };
+};
 
 const HEX_COLOR_REGEX = /^#(?:[0-9A-F]{3}|[0-9A-F]{6})$/i;
 
 export function getSupporterNicknameColor(user: UserResponse) {
-  const nicknameColor = (user as UserWithNicknameColor).nickname_color;
+  const userWithAdditionalFields = user as UserWithAdditionalNicknameColorFields;
+
+  const nicknameColor
+    = (user as UserWithNicknameColor).nickname_color
+      ?? userWithAdditionalFields.nicknameColor
+      ?? userWithAdditionalFields.metadata?.nickname_color
+      ?? userWithAdditionalFields.metadata?.nicknameColor;
 
   console.info("[nickname-color] resolve", {
     userId: user.user_id,
     username: user.username,
     isSupporter: user.badges.includes(UserBadge.SUPPORTER),
     nicknameColor,
+    metadataNicknameColor: userWithAdditionalFields.metadata?.nickname_color,
   });
 
   if (!user.badges.includes(UserBadge.SUPPORTER)) {

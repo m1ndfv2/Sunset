@@ -26,6 +26,10 @@ export type EditNicknameColorRequest = {
   nickname_color: string;
 };
 
+type UserWithNicknameColor = {
+  nickname_color?: string | null;
+};
+
 export function useEditNicknameColor() {
   const { data } = useUserSelf();
 
@@ -46,7 +50,20 @@ export function useEditNicknameColor() {
         result,
       });
 
-      mutate(`user/${data?.user_id}`);
+      mutate(
+        `user/${data?.user_id}`,
+        (cachedUser: UserWithNicknameColor | undefined) => {
+          if (!cachedUser) {
+            return cachedUser;
+          }
+
+          return {
+            ...cachedUser,
+            nickname_color: arg.nickname_color,
+          };
+        },
+        false,
+      );
       mutate(`user/${data?.user_id}/metadata`);
 
       console.info("[nickname-color] cache invalidated", {
