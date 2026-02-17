@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import UserNickname from "@/components/UserNickname";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
 import { isUserCanUseAdminPanel } from "@/lib/utils/userPrivileges.util";
@@ -151,7 +152,7 @@ export default function HeaderMobileDrawer() {
                       </Suspense>
                     </Avatar>
                     <p className="mx-2 block truncate font-medium">
-                      {self.username}
+                      <UserNickname user={self} />
                     </p>
                   </Link>
                 </DrawerClose>
