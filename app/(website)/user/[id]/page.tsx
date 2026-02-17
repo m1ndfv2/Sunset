@@ -2,6 +2,7 @@
 
 import { Edit3Icon, LucideSettings, User as UserIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -48,6 +49,15 @@ import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
 import UserTabBeatmaps from "./components/Tabs/UserTabBeatmaps";
 import UserTabMedals from "./components/Tabs/UserTabMedals";
+
+type UserWithClan = UserResponse & {
+  clan?: {
+    id?: number;
+    name?: string;
+  } | null;
+  clan_id?: number | null;
+  clan_name?: string | null;
+};
 
 export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
@@ -195,6 +205,10 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userMetada = userMetadataQuery.data;
   const userClan = userClanQuery.data?.clan;
 
+  const userWithClan = user as UserWithClan | undefined;
+  const clanName = userWithClan?.clan?.name ?? userWithClan?.clan_name ?? null;
+  const clanId = userWithClan?.clan?.id ?? userWithClan?.clan_id ?? null;
+
   return (
     <div className="flex flex-col space-y-4">
       <PrettyHeader icon={<UserIcon />} text={t("header")} roundBottom={true}>
@@ -275,6 +289,25 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                           className="grid text-xs md:flex md:text-base"
                           user={user}
                         />
+
+                        {clanName && (
+                          <div className="mt-1 text-xs md:text-sm">
+                            {clanId
+                              ? (
+                                  <Link
+                                    href={`/clans/${clanId}`}
+                                    className="text-primary hover:underline"
+                                  >
+                                    {t("labels.clan", { clan: clanName })}
+                                  </Link>
+                                )
+                              : (
+                                  <span className="text-muted-foreground">
+                                    {t("labels.clan", { clan: clanName })}
+                                  </span>
+                                )}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <UserRanks user={user} userStats={userStats} />

@@ -693,7 +693,8 @@
         "options": "options",
         "changePassword": "change passwowd",
         "changeUsername": "change uwsewname",
-        "changeCountryFlag": "Change country flag"
+        "changeCountryFlag": "Change country flag",
+        "nicknameColor": "Nickname colour"
       },
       "description": {
         "reminder": "* remindew: do not post any inappwopwiate content. Twy to keep it famiwy fwiendwy owo"
@@ -788,6 +789,15 @@
           },
           "note": "* note: {type}s awe wimited to 5mb in size"
         },
+        "nicknameColor": {
+          "label": "Nickname colour (Supporter only)",
+          "chooseColor": "Choose colour {color}",
+          "button": "Save nickname colour",
+          "toast": {
+            "success": "Nickname colour updated",
+            "error": "Failed to update nickname colour"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "incwuwde \"open on bancho\" buwtton in beatmap page",
           "useSpaciousUI": "use spaciouws ui (incwease spacing between ewements)"
@@ -819,6 +829,9 @@
         "userNotFound": "Usew not found ow an ewwow occuwwwed.",
         "restricted": "This means that the usew viowated the sewvew wuwes and has been westwicted. :<",
         "userDeleted": "The usew may have been deweted ow does not exist."
+      },
+      "labels": {
+        "clan": "Clan: {clan}"
       },
       "components": {
         "generalTab": {
@@ -973,6 +986,17 @@
         "save": "save changes",
         "saved": "cwan updated",
         "updateFailed": "couwd not update cwan",
+
+        "delete": "Delete clan",
+        "deleted": "Clan deleted",
+        "deleteFailed": "Could not delete clan",
+        "onlyCreatorCanDelete": "Only the clan creator can delete the clan",
+
+        "deleteConfirmTitle": "Delete clan?",
+        "deleteConfirmDescription": "This action cannot be undone. The clan and its membership will be removed.",
+        "confirmDelete": "Yes, delete clan",
+        "deleting": "Deleting...",
+        "cancel": "Cancel",
         "kick": "kick",
         "kicked": "membew wemoved fwom cwan",
         "kickFailed": "couwd not wemove membew",

@@ -1817,6 +1817,10 @@
         "changeCountryFlag": {
           "text": "Change country flag",
           "context": "Title for the change country flag section"
+        },
+        "nicknameColor": {
+          "text": "Nickname color",
+          "context": "Title for the nickname color section"
         }
       },
       "description": {
@@ -2048,6 +2052,30 @@
             "context": "Note about file size limit, includes type (avatar/banner) as parameter"
           }
         },
+        "nicknameColor": {
+          "label": {
+            "text": "Nickname color (Supporter only)",
+            "context": "Label for the nickname color setting, visible only to Supporter users"
+          },
+          "chooseColor": {
+            "text": "Choose color {color}",
+            "context": "Accessible label for choosing a nickname color swatch, includes color hex code"
+          },
+          "button": {
+            "text": "Save nickname color",
+            "context": "Button text to save the selected nickname color"
+          },
+          "toast": {
+            "success": {
+              "text": "Nickname color updated",
+              "context": "Success toast shown when nickname color is saved"
+            },
+            "error": {
+              "text": "Failed to update nickname color",
+              "context": "Error toast shown when nickname color update fails"
+            }
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": {
             "text": "Include \"Open on Bancho\" button in beatmap page",
@@ -2129,6 +2157,12 @@
         "userDeleted": {
           "text": "The user may have been deleted or does not exist.",
           "context": "Error message when user may have been deleted or doesn't exist"
+        }
+      },
+      "labels": {
+        "clan": {
+          "text": "Clan: {clan}",
+          "context": "Label shown under the username on profile page with clan name"
         }
       },
       "components": {
@@ -2443,6 +2477,15 @@
         "save": "Save changes",
         "saved": "Clan updated",
         "updateFailed": "Could not update clan",
+        "delete": "Delete clan",
+        "deleted": "Clan deleted",
+        "deleteFailed": "Could not delete clan",
+        "onlyCreatorCanDelete": "Only the clan creator can delete the clan",
+        "deleteConfirmTitle": "Delete clan?",
+        "deleteConfirmDescription": "This action cannot be undone. The clan and its membership will be removed.",
+        "confirmDelete": "Yes, delete clan",
+        "deleting": "Deleting...",
+        "cancel": "Cancel",
         "kick": "Kick",
         "kicked": "Member removed from clan",
         "kickFailed": "Could not remove member",

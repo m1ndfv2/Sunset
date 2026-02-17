@@ -691,7 +691,8 @@
         "options": "Opciones",
         "changePassword": "Cambiar contraseña",
         "changeUsername": "Cambiar nombre de usuario",
-        "changeCountryFlag": "Cambiar bandera del país"
+        "changeCountryFlag": "Cambiar bandera del país",
+        "nicknameColor": "Color del apodo"
       },
       "description": {
         "reminder": "* Recordatorio: No publiques contenido inapropiado. Intenta mantenerlo apto para todos :)"
@@ -784,6 +785,15 @@
           },
           "note": "* Nota: los {type}s están limitados a 5MB"
         },
+        "nicknameColor": {
+          "label": "Color del apodo (solo Supporter)",
+          "chooseColor": "Elegir color {color}",
+          "button": "Guardar color del apodo",
+          "toast": {
+            "success": "Color del apodo actualizado",
+            "error": "No se pudo actualizar el color del apodo"
+          }
+        },
         "siteOptions": {
           "includeBanchoButton": "Incluir botón \"Open on Bancho\" en la página del beatmap",
           "useSpaciousUI": "Usar interfaz espaciosa (aumentar el espaciado entre elementos)"
@@ -815,6 +825,9 @@
         "userNotFound": "Usuario no encontrado o ocurrió un error.",
         "restricted": "Esto significa que el usuario violó las reglas del servidor y ha sido restringido.",
         "userDeleted": "El usuario puede haber sido eliminado o no existir."
+      },
+      "labels": {
+        "clan": "Clan: {clan}"
       },
       "components": {
         "generalTab": {
@@ -969,6 +982,17 @@
         "save": "Guardar cambios",
         "saved": "Clan actualizado",
         "updateFailed": "No se pudo actualizar el clan",
+
+        "delete": "Eliminar clan",
+        "deleted": "Clan eliminado",
+        "deleteFailed": "No se pudo eliminar el clan",
+        "onlyCreatorCanDelete": "Solo el creador del clan puede eliminar el clan",
+
+        "deleteConfirmTitle": "¿Eliminar clan?",
+        "deleteConfirmDescription": "Esta acción no se puede deshacer. El clan y sus miembros se eliminarán.",
+        "confirmDelete": "Sí, eliminar clan",
+        "deleting": "Eliminando...",
+        "cancel": "Cancelar",
         "kick": "Expulsar",
         "kicked": "Miembro expulsado del clan",
         "kickFailed": "No se pudo expulsar al miembro",
