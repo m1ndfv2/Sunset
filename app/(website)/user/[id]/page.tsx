@@ -59,6 +59,10 @@ type UserWithClan = UserResponse & {
   clan_name?: string | null;
 };
 
+function parseGameModeFromQuery(mode: string): GameMode | null {
+  return isInstance(mode, GameMode) ? (mode as GameMode) : null;
+}
+
 export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
   const userId = tryParseNumber(params.id) ?? 0;
@@ -81,7 +85,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
 
   const [activeTab, setActiveTab] = useState("tabs.general");
   const [activeMode, setActiveMode] = useState<GameMode | null>(
-    () => (isInstance(mode, GameMode) ? (mode as GameMode) : null),
+    () => parseGameModeFromQuery(mode),
   );
 
   const { self } = useSelf();
