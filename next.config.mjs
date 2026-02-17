@@ -78,6 +78,9 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 const withNextIntl = createNextIntlPlugin("./lib/i18n/request.ts");

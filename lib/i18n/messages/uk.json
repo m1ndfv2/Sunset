@@ -874,7 +874,8 @@
           "joined": "Приєднався <b>{time}</b>",
           "followers": "<b>{count}</b> Підписників",
           "following": "<b>{count}</b> Підписок",
-          "playsWith": "Грає з <b>{playstyle}</b>"
+          "playsWith": "Грає з <b>{playstyle}</b>",
+          "clan": "Клан: <b>{clan}</b>"
         },
         "statusText": {
           "lastSeenOn": ", востаннє бачено {date}"
