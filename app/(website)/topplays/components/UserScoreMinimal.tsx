@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import UserHoverCard from "@/components/UserHoverCard";
 import UserNickname from "@/components/UserNickname";
 import { useBeatmap } from "@/lib/hooks/api/beatmap/useBeatmap";
+import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import { useUserStats } from "@/lib/hooks/api/user/useUser";
 import { useT } from "@/lib/i18n/utils";
 import type { ScoreResponse } from "@/lib/types/api";
@@ -33,9 +34,18 @@ export default function UserScoreMinimal({
 
   const user = userStatsQuery.data?.user;
   const beatmap = beatmapQuery.data;
+  const userClanQuery = useUserClan(score.user_id, score.game_mode);
   const supporterNicknameColor = user
     ? getSupporterNicknameColor(user)
     : undefined;
+  const clan = userClanQuery.data?.clan;
+  const normalizedTag = clan?.tag?.trim().toUpperCase();
+  const clanPrefixRegex = normalizedTag
+    ? new RegExp(`^\\s*\\[${normalizedTag}\\]\\s*`, "i")
+    : null;
+  const usernameWithoutTag = clanPrefixRegex && user
+    ? user.username.replace(clanPrefixRegex, "")
+    : user?.username;
 
   return (
     <div
@@ -107,20 +117,35 @@ export default function UserScoreMinimal({
                         </Suspense>
                       </Avatar>
 
-                      <div className="mx-1 line-clamp-1">
+                      <div className="mx-1 line-clamp-1 flex min-w-0 items-center gap-1">
                         {user ? (
-                          <UserHoverCard user={user} asChild>
-                            <span
-                              className="truncate"
-                              style={
-                                supporterNicknameColor
-                                  ? { color: supporterNicknameColor }
-                                  : undefined
-                              }
-                            >
-                              <UserNickname user={user} />
-                            </span>
-                          </UserHoverCard>
+                          <>
+                            {clan?.tag && (
+                              <Link
+                                href={`/clans/${clan.id}`}
+                                className="shrink-0 text-xs font-semibold text-primary hover:underline"
+                              >
+                                [{clan.tag}]
+                              </Link>
+                            )}
+                            <UserHoverCard user={user} asChild>
+                              <span
+                                className="truncate"
+                                style={
+                                  supporterNicknameColor
+                                    ? { color: supporterNicknameColor }
+                                    : undefined
+                                }
+                              >
+                                <UserNickname
+                                  user={{
+                                    ...user,
+                                    username: usernameWithoutTag ?? user.username,
+                                  }}
+                                />
+                              </span>
+                            </UserHoverCard>
+                          </>
                         ) : (
                           <Skeleton className="h-3 w-20" />
                         )}

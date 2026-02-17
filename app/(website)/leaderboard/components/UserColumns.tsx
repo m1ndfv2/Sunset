@@ -19,9 +19,53 @@ import {
 import UserHoverCard from "@/components/UserHoverCard";
 import UserNickname from "@/components/UserNickname";
 import UserRankColor from "@/components/UserRankNumber";
+import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import { useT } from "@/lib/i18n/utils";
-import type { UserResponse, UserStatsResponse } from "@/lib/types/api";
+import type { GameMode, UserResponse, UserStatsResponse } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
+
+function LeaderboardUserIdentity({
+  user,
+  gameMode,
+}: {
+  user: UserResponse;
+  gameMode: GameMode;
+}) {
+  const userClanQuery = useUserClan(user.user_id, gameMode);
+  const clan = userClanQuery.data?.clan;
+  const normalizedTag = clan?.tag?.trim().toUpperCase();
+  const clanPrefixRegex = normalizedTag
+    ? new RegExp(`^\\s*\\[${normalizedTag}\\]\\s*`, "i")
+    : null;
+  const usernameWithoutTag = clanPrefixRegex
+    ? user.username.replace(clanPrefixRegex, "")
+    : user.username;
+
+  return (
+    <div className="flex min-w-0 items-center gap-1">
+      {clan?.tag && (
+        <Link
+          href={`/clans/${clan.id}`}
+          className="shrink-0 text-xs font-semibold text-primary hover:underline"
+        >
+          [{clan.tag}]
+        </Link>
+      )}
+      <UserHoverCard user={user} asChild>
+        <Link href={`/user/${user.user_id}`} className="hover:underline">
+          <span className="smooth-transition cursor-pointer truncate text-lg font-bold">
+            <UserNickname
+              user={{
+                ...user,
+                username: usernameWithoutTag,
+              }}
+            />
+          </span>
+        </Link>
+      </UserHoverCard>
+    </div>
+  );
+}
 
 export function useUserColumns() {
   const t = useT("pages.leaderboard.table");
@@ -103,7 +147,6 @@ export function useUserColumns() {
           accessorKey: "user.username",
           header: "",
           cell: ({ row }) => {
-            const userId = row.original.user.user_id;
             const { avatar_url } = row.original.user;
 
             return (
@@ -114,15 +157,10 @@ export function useUserColumns() {
                   </Suspense>
                 </Avatar>
 
-                <UserHoverCard user={row.original.user} asChild>
-                  <Link href={`/user/${userId}`} className="hover:underline">
-                    <span
-                      className="smooth-transition cursor-pointer text-lg font-bold"
-                    >
-                      <UserNickname user={row.original.user} />
-                    </span>
-                  </Link>
-                </UserHoverCard>
+                <LeaderboardUserIdentity
+                  user={row.original.user}
+                  gameMode={row.original.stats.gamemode}
+                />
               </div>
             );
           },

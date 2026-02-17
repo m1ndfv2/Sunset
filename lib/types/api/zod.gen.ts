@@ -609,6 +609,7 @@ export const zUserPrivilege = z.enum([
   "User",
   "Supporter",
   "Bat",
+  "Moderator",
   "Admin",
   "Developer",
   "SuperUser",
