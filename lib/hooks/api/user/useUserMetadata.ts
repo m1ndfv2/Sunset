@@ -32,12 +32,27 @@ export function useEditNicknameColor() {
   return useSWRMutation(
     data ? `user/${data.user_id}/metadata` : null,
     async (_url: string, { arg }: { arg: EditNicknameColorRequest }) => {
+      console.info("[nickname-color] request", {
+        userId: data?.user_id,
+        payload: arg,
+      });
+
       const result = await poster("user/edit/nickname-color", {
         json: arg,
       });
 
+      console.info("[nickname-color] response", {
+        userId: data?.user_id,
+        result,
+      });
+
       mutate(`user/${data?.user_id}`);
       mutate(`user/${data?.user_id}/metadata`);
+
+      console.info("[nickname-color] cache invalidated", {
+        userKey: `user/${data?.user_id}`,
+        metadataKey: `user/${data?.user_id}/metadata`,
+      });
 
       return result;
     },

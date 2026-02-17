@@ -38,6 +38,11 @@ export default function ChangeNicknameColorInput({
 }) {
   const initialColor = normalizeColor(initialNicknameColor ?? DEFAULT_COLOR);
 
+  console.info("[nickname-color] settings init", {
+    initialNicknameColor,
+    normalizedInitialColor: initialColor,
+  });
+
   const [color, setColor] = useState(initialColor);
   const { trigger, isMutating } = useEditNicknameColor();
   const { toast } = useToast();
@@ -47,16 +52,30 @@ export default function ChangeNicknameColorInput({
       nickname_color: color,
     };
 
+    console.info("[nickname-color] save clicked", {
+      payload,
+      isMutating,
+    });
+
     trigger(
       payload,
       {
         onSuccess: () => {
+          console.info("[nickname-color] save success", {
+            nickname_color: color,
+          });
+
           toast({
             title: "Nickname color updated",
             variant: "success",
           });
         },
         onError: (err) => {
+          console.error("[nickname-color] save failed", {
+            nickname_color: color,
+            error: err,
+          });
+
           toast({
             title: "Failed to update nickname color",
             description: err.message,
