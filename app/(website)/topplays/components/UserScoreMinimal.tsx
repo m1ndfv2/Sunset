@@ -9,11 +9,11 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserHoverCard from "@/components/UserHoverCard";
-import UserRankColor from "@/components/UserRankNumber";
 import { useBeatmap } from "@/lib/hooks/api/beatmap/useBeatmap";
 import { useUserStats } from "@/lib/hooks/api/user/useUser";
 import { useT } from "@/lib/i18n/utils";
 import type { ScoreResponse } from "@/lib/types/api";
+import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 
 interface UserScoreMinimalProps {
   score: ScoreResponse;
@@ -31,8 +31,10 @@ export default function UserScoreMinimal({
   const beatmapQuery = useBeatmap(score.beatmap_id);
 
   const user = userStatsQuery.data?.user;
-  const userStats = userStatsQuery.data?.stats;
   const beatmap = beatmapQuery.data;
+  const supporterNicknameColor = user
+    ? getSupporterNicknameColor(user)
+    : undefined;
 
   return (
     <div
@@ -107,13 +109,16 @@ export default function UserScoreMinimal({
                       <div className="mx-1 line-clamp-1">
                         {user ? (
                           <UserHoverCard user={user} asChild>
-                            <UserRankColor
-                              rank={userStats?.rank ?? -1}
-                              variant="primary"
+                            <span
                               className="truncate"
+                              style={
+                                supporterNicknameColor
+                                  ? { color: supporterNicknameColor }
+                                  : undefined
+                              }
                             >
                               {user.username}
-                            </UserRankColor>
+                            </span>
                           </UserHoverCard>
                         ) : (
                           <Skeleton className="h-3 w-20" />

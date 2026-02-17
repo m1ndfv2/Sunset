@@ -25,7 +25,6 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import Spinner from "@/components/Spinner";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
-import UserRankColor from "@/components/UserRankNumber";
 import {
   useUser,
   useUserSelf,
@@ -42,6 +41,7 @@ import {
   GameMode,
   ScoreTableType,
 } from "@/lib/types/api";
+import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 import { isInstance, tryParseNumber } from "@/lib/utils/type.util";
 import { isUserCanUseAdminUserSearch } from "@/lib/utils/userPrivileges.util";
 
@@ -191,6 +191,9 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const user = userQuery.data;
   const userStats = userStatsQuery.data?.stats;
   const userMetada = userMetadataQuery.data;
+  const supporterNicknameColor = user
+    ? getSupporterNicknameColor(user)
+    : undefined;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -248,13 +251,16 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
                             content={user.username}
                             align="start"
                           >
-                            <UserRankColor
+                            <span
                               className="ml-full mt-0.5 truncate text-lg font-bold md:text-3xl"
-                              variant="primary"
-                              rank={userStats?.rank ?? -1}
+                              style={
+                                supporterNicknameColor
+                                  ? { color: supporterNicknameColor }
+                                  : undefined
+                              }
                             >
                               {user.username}
-                            </UserRankColor>
+                            </span>
                           </Tooltip>
 
                           <UserPreviousUsernamesTooltip

@@ -12,6 +12,7 @@ import { useMemo } from "react";
 
 import ChangeCountryInput from "@/app/(website)/settings/components/ChangeCountryInput";
 import ChangeDescriptionInput from "@/app/(website)/settings/components/ChangeDescriptionInput";
+import ChangeNicknameColorInput from "@/app/(website)/settings/components/ChangeNicknameColorInput";
 import ChangePasswordInput from "@/app/(website)/settings/components/ChangePasswordInput";
 import ChangePlaystyleForm from "@/app/(website)/settings/components/ChangePlaystyleForm";
 import ChangeSocialsForm from "@/app/(website)/settings/components/ChangeSocialsForm";
@@ -30,6 +31,7 @@ import {
 import { useUserMetadata } from "@/lib/hooks/api/user/useUserMetadata";
 import useSelf from "@/lib/hooks/useSelf";
 import { useT } from "@/lib/i18n/utils";
+import { UserBadge } from "@/lib/types/api";
 
 export default function Settings() {
   const t = useT("pages.settings");
@@ -126,6 +128,19 @@ export default function Settings() {
           </RoundedContent>
         ),
       },
+      ...(self?.badges.includes(UserBadge.SUPPORTER) && userMetadata
+        ? [{
+            icon: <User2Icon />,
+            title: "Nickname color",
+            content: (
+              <RoundedContent>
+                <div className="mx-auto flex w-11/12 flex-col">
+                  <ChangeNicknameColorInput metadata={userMetadata} />
+                </div>
+              </RoundedContent>
+            ),
+          }]
+        : []),
       {
         icon: <LockOpenIcon />,
         title: t("sections.changePassword"),
