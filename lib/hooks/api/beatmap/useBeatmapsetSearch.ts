@@ -3,6 +3,7 @@
 import type { SWRConfiguration } from "swr";
 import useSWRInfinite from "swr/infinite";
 
+import fetcher from "@/lib/services/fetcher";
 import type {
   BeatmapStatusWeb,
   GameMode,
@@ -44,8 +45,45 @@ export function useBeatmapsetSearch(
       status.forEach(s => queryParams.append("status", s));
     }
 
-    return `beatmapset/search?${queryParams.toString()}`;
+    const key = `beatmapset/search?${queryParams.toString()}`;
+
+    console.info("[beatmaps-search] request key built", {
+      page: pageIndex + 1,
+      key,
+      query,
+      limit,
+      mode,
+      status,
+      searchByCustomStatus,
+    });
+
+    return key;
   };
 
-  return useSWRInfinite<GetBeatmapsetSearchResponse>(getKey, options);
+  return useSWRInfinite<GetBeatmapsetSearchResponse>(
+    getKey,
+    async (key: string) => {
+      console.info("[beatmaps-search] request started", { key });
+
+      try {
+        const response = await fetcher<GetBeatmapsetSearchResponse>(key);
+
+        console.info("[beatmaps-search] request success", {
+          key,
+          setsCount: response.sets.length,
+          totalCount: response.total_count,
+        });
+
+        return response;
+      }
+      catch (error) {
+        console.error("[beatmaps-search] request failed", {
+          key,
+          error,
+        });
+        throw error;
+      }
+    },
+    options,
+  );
 }

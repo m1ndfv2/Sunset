@@ -113,7 +113,7 @@ export default function Leaderboard() {
     total_count: 0,
   };
 
-  const userColumns = useUserColumns();
+  const userColumns = useUserColumns(activeMode);
 
   return (
     <div className="flex w-full flex-col space-y-4">
