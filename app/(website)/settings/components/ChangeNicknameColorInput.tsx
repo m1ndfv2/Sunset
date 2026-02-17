@@ -5,8 +5,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useEditUserMetadata } from "@/lib/hooks/api/user/useUserMetadata";
-import type { EditUserMetadataRequest } from "@/lib/types/api";
+import {
+  useEditNicknameColor,
+} from "@/lib/hooks/api/user/useUserMetadata";
 
 const DEFAULT_COLOR = "#ffffff";
 const COLOR_PALETTE = [
@@ -38,11 +39,11 @@ export default function ChangeNicknameColorInput({
   const initialColor = normalizeColor(initialNicknameColor ?? DEFAULT_COLOR);
 
   const [color, setColor] = useState(initialColor);
-  const { trigger, isMutating } = useEditUserMetadata();
+  const { trigger, isMutating } = useEditNicknameColor();
   const { toast } = useToast();
 
   const onSave = () => {
-    const payload: EditUserMetadataRequest & { nickname_color: string } = {
+    const payload = {
       nickname_color: color,
     };
 
