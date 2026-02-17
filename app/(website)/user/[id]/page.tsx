@@ -94,7 +94,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userQuery = userId === self?.user_id ? useUserSelf() : useUser(userId);
   const userStatsQuery = useUserStats(userId, activeMode);
   const userMetadataQuery = useUserMetadata(userId);
-  const userClanQuery = useUserClan(userId, activeMode ?? GameMode.Standard);
+  const userClanQuery = useUserClan(userId, activeMode ?? GameMode.STANDARD);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
