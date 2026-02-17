@@ -2,7 +2,7 @@
 
 import { ChevronDown, Filter, Search } from "lucide-react";
 import type * as React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import BeatmapSetOverview from "@/app/(website)/user/[id]/components/BeatmapSetOverview";
@@ -38,7 +38,7 @@ export default function BeatmapsSearch({
   const [searchByCustomStatus, setSearchByCustomStatus] = useState(false);
   const [viewMode, setViewMode] = useState("grid");
 
-  const { data, setSize, size, isLoading } = useBeatmapsetSearch(
+  const { data, setSize, size, isLoading, error } = useBeatmapsetSearch(
     searchValue,
     searchByCustomStatus ? 12 : 24,
     statusFilter ?? undefined,
@@ -56,6 +56,47 @@ export default function BeatmapsSearch({
   const isLoadingMore
     = isLoading || (size > 0 && data && data[size - 1] === undefined);
 
+  useEffect(() => {
+    console.info("[beatmaps-search] filters changed", {
+      searchQuery,
+      searchValue,
+      modeFilter,
+      statusFilter,
+      searchByCustomStatus,
+      viewMode,
+      size,
+    });
+  }, [
+    modeFilter,
+    searchByCustomStatus,
+    searchQuery,
+    searchValue,
+    size,
+    statusFilter,
+    viewMode,
+  ]);
+
+  useEffect(() => {
+    if (!data)
+      return;
+
+    console.info("[beatmaps-search] aggregated data updated", {
+      pages: data.length,
+      setsPerPage: data.map(page => page.sets.length),
+      totalSetsLoaded: beatmapsets?.length ?? 0,
+      totalCountFromFirstPage: data[0]?.total_count ?? null,
+    });
+  }, [beatmapsets?.length, data]);
+
+  useEffect(() => {
+    if (!error)
+      return;
+
+    console.error("[beatmaps-search] hook error", {
+      error,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }, [error]);
   const handleShowMore = useCallback(() => {
     setSize(size + 1);
   }, [setSize, size]);
