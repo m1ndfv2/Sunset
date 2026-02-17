@@ -72,7 +72,6 @@ export function useBeatmapsetSearch(
           key,
           setsCount: response.sets.length,
           totalCount: response.total_count,
-          page: response.page,
         });
 
         return response;
