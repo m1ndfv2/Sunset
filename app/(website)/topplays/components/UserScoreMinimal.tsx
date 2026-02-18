@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { twMerge } from "tailwind-merge";
 
 import ImageWithFallback from "@/components/ImageWithFallback";
+import SupporterIcon from "@/components/SupporterIcon";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserHoverCard from "@/components/UserHoverCard";
@@ -15,6 +16,7 @@ import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import { useUserStats } from "@/lib/hooks/api/user/useUser";
 import { useT } from "@/lib/i18n/utils";
 import type { ScoreResponse } from "@/lib/types/api";
+import { UserBadge } from "@/lib/types/api";
 import { getSupporterNicknameColor } from "@/lib/utils/getSupporterNicknameColor";
 
 interface UserScoreMinimalProps {
@@ -130,7 +132,7 @@ export default function UserScoreMinimal({
                             )}
                             <UserHoverCard user={user} asChild>
                               <span
-                                className="truncate"
+                                className="flex min-w-0 items-center gap-1 truncate"
                                 style={
                                   supporterNicknameColor
                                     ? { color: supporterNicknameColor }
@@ -142,7 +144,11 @@ export default function UserScoreMinimal({
                                     ...user,
                                     username: usernameWithoutTag ?? user.username,
                                   }}
+                                  className="truncate"
                                 />
+                                {user.badges.includes(UserBadge.SUPPORTER) && (
+                                  <SupporterIcon className="size-3.5 shrink-0" />
+                                )}
                               </span>
                             </UserHoverCard>
                           </>

@@ -8,6 +8,7 @@ import { Suspense, useContext, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { UserTableContext } from "@/app/(website)/leaderboard/components/UserDataTable";
+import SupporterIcon from "@/components/SupporterIcon";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +23,7 @@ import UserRankColor from "@/components/UserRankNumber";
 import { useUserClan } from "@/lib/hooks/api/clan/useClan";
 import { useT } from "@/lib/i18n/utils";
 import type { GameMode, UserResponse, UserStatsResponse } from "@/lib/types/api";
+import { UserBadge } from "@/lib/types/api";
 import numberWith from "@/lib/utils/numberWith";
 
 function LeaderboardUserIdentity({
@@ -53,13 +55,17 @@ function LeaderboardUserIdentity({
       )}
       <UserHoverCard user={user} asChild>
         <Link href={`/user/${user.user_id}`} className="hover:underline">
-          <span className="smooth-transition cursor-pointer truncate text-lg font-bold">
+          <span className="smooth-transition flex min-w-0 cursor-pointer items-center gap-1 truncate text-lg font-bold">
             <UserNickname
               user={{
                 ...user,
                 username: usernameWithoutTag,
               }}
+              className="truncate"
             />
+            {user.badges.includes(UserBadge.SUPPORTER) && (
+              <SupporterIcon className="size-3.5 shrink-0" />
+            )}
           </span>
         </Link>
       </UserHoverCard>
