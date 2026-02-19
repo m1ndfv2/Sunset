@@ -212,6 +212,7 @@ export default function UserPage(props: { params: Promise<{ id: string }> }) {
   const userWithClan = user as UserWithClan | undefined;
   const clanName = userWithClan?.clan?.name ?? userWithClan?.clan_name ?? null;
   const clanId = userWithClan?.clan?.id ?? userWithClan?.clan_id ?? null;
+  const userClan = userWithClan?.clan ?? null;
 
   return (
     <div className="flex flex-col space-y-4">

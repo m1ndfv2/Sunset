@@ -23,7 +23,10 @@ import { timeSince } from "@/lib/utils/timeSince";
 interface UserGeneralInformationProps {
   user: UserResponse;
   metadata?: UserMetadataResponse;
-  clan?: ClanResponse;
+  clan?: {
+    id?: number;
+    name?: string;
+  } | null;
 }
 
 export default function UserGeneralInformation({
@@ -34,6 +37,7 @@ export default function UserGeneralInformation({
   const t = useT("pages.user.components.generalInformation");
   const tPlaystyle = useT("pages.settings.components.playstyle");
   const userPlaystyle = metadata ? metadata.playstyle.join(", ") : null;
+  const _clanName = clan?.name ?? null;
 
   const friendsQuery = useUserFriendsCount(user.user_id);
 
