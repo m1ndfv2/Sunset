@@ -3,9 +3,7 @@
 import { BookCopy, LucideMessageCircleQuestion } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-
+import { useMemo, useState } from "react";
 import PrettyHeader from "@/components/General/PrettyHeader";
 import RoundedContent from "@/components/General/RoundedContent";
 import {
@@ -15,10 +13,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useT } from "@/lib/i18n/utils";
-import { tryParseNumber } from "@/lib/utils/type.util";
 
 export default function Wiki() {
-  const pathname = usePathname();
   const t = useT("pages.wiki.articles");
   const tHeader = useT("pages.wiki");
 
@@ -27,19 +23,18 @@ export default function Wiki() {
   const wikiContent = useMemo(
     () => [
       {
-        tag: "How to connect",
         title: t("howToConnect.title"),
         content: (
           <RoundedContent>
             <div className="mx-auto flex w-11/12 flex-col">
               <h1 className="text-xl">{t("howToConnect.intro")}</h1>
-              <ol className="mt-2 list-inside list-decimal">
+              <ol className="mt-2 list-inside list-decimal space-y-1">
                 <li>{t.rich("howToConnect.step1")}</li>
                 <li>{t("howToConnect.step2")}</li>
                 <li>{t("howToConnect.step3")}</li>
                 <li>
                   {t.rich("howToConnect.step4", {
-                    serverDomain: process.env.NEXT_PUBLIC_SERVER_DOMAIN || "",
+                    serverDomain: process.env.NEXT_PUBLIC_SERVER_DOMAIN || "your-server.com",
                   })}
                 </li>
                 <li>{t("howToConnect.step5")}</li>
@@ -50,14 +45,13 @@ export default function Wiki() {
                 alt={t("howToConnect.imageAlt")}
                 width={800}
                 height={200}
-                className="mt-4 rounded-lg"
+                className="mt-6 rounded-lg mx-auto"
               />
             </div>
           </RoundedContent>
         ),
       },
       {
-        tag: "Can I have multiple accounts?",
         title: t("multipleAccounts.title"),
         content: (
           <RoundedContent>
@@ -69,7 +63,6 @@ export default function Wiki() {
         ),
       },
       {
-        tag: "Can I use cheats or hacks?",
         title: t("cheatsHacks.title"),
         content: (
           <RoundedContent>
@@ -81,7 +74,6 @@ export default function Wiki() {
         ),
       },
       {
-        tag: "I think I was restricted unfairly. How can I appeal?",
         title: t("appealRestriction.title"),
         content: (
           <RoundedContent>
@@ -92,7 +84,7 @@ export default function Wiki() {
                   <span>
                     {" "}
                     {t.rich("appealRestriction.contactStaff", {
-                      a: chunks => (
+                      a: (chunks: any) => (
                         <Link
                           href={process.env.NEXT_PUBLIC_DISCORD_LINK ?? ""}
                           className="text-primary underline transition-opacity hover:opacity-80"
@@ -110,7 +102,6 @@ export default function Wiki() {
         ),
       },
       {
-        tag: "Can I contribute/suggest changes to the server?",
         title: t("contributeSuggest.title"),
         content: (
           <RoundedContent>
@@ -118,9 +109,9 @@ export default function Wiki() {
               <h1 className="text-xl">{t("contributeSuggest.answer")}</h1>
               <p className="mt-2">
                 {t.rich("contributeSuggest.instructions", {
-                  a: chunks => (
+                  a: (chunks: any) => (
                     <Link
-                      href="https://github.com/osum1ndCommunity"
+                      href="https://github.com/SunriseCommunity"
                       className="text-primary underline transition-opacity hover:opacity-80"
                     >
                       {chunks}
@@ -133,7 +124,6 @@ export default function Wiki() {
         ),
       },
       {
-        tag: "I can’t download maps when I’m in multiplayer, but I can download them from the main menu",
         title: t("multiplayerDownload.title"),
         content: (
           <RoundedContent>
@@ -146,65 +136,39 @@ export default function Wiki() {
         ),
       },
     ],
-    [t],
+    [t]
   );
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hash = decodeURIComponent(window.location.hash).slice(1);
-      const element = wikiContent.find(({ tag }) => tag === hash);
-
-      if (element) {
-        const index = wikiContent.indexOf(element).toString();
-        setValue(index);
-
-        const target = document.getElementById(`accordion-item-${index}`);
-        target?.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- causes unwanted resets of the accordion
-  }, [pathname]);
-
-  useEffect(() => {
-    const element = wikiContent[tryParseNumber(value) ?? -1];
-
-    window.history.replaceState(
-      null,
-      "",
-      pathname + (element ? `#${encodeURIComponent(element.tag)}` : ""),
-    );
-  }, [value, pathname, wikiContent]);
-
   return (
-    <div className="flex w-full flex-col space-y-4">
+    <div className="flex w-full flex-col space-y-6 p-4 max-w-4xl mx-auto">
       <PrettyHeader
         text={tHeader("header")}
-        icon={<BookCopy />}
+        icon={<BookCopy className="h-8 w-8" />}
         roundBottom={true}
       />
 
       <Accordion
         type="single"
         collapsible
-        className="space-y-4"
         value={value ?? undefined}
         onValueChange={setValue}
+        className="space-y-4"
       >
         {wikiContent.map(({ title, content }, index) => (
           <AccordionItem
-            id={`accordion-item-${index}`}
-            // eslint-disable-next-line @eslint-react/no-array-index-key -- static list
-            key={`wiki-accordion-item-${index}`}
+            key={index}
             value={index.toString()}
-            className="border-b-0"
+            className="border border-border rounded-lg overflow-hidden bg-card shadow-sm"
           >
-            <AccordionTrigger className="flex rounded-t-lg bg-card p-4 shadow [&[data-state=closed]]:rounded-lg">
-              <div className="flex items-center space-x-2">
-                <LucideMessageCircleQuestion className="flex-shrink-0" />
-                <p>{title}</p>
+            <AccordionTrigger className="px-4 py-4 hover:no-underline data-[state=open]:bg-muted/50">
+              <div className="flex items-center gap-3 text-left">
+                <LucideMessageCircleQuestion className="h-5 w-5 flex-shrink-0 text-primary" />
+                <span className="font-medium">{title}</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent>{content}</AccordionContent>
+            <AccordionContent className="px-4 pb-4 pt-2">
+              {content}
+            </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
